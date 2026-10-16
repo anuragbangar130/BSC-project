@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Subjects - BCS Pedia</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #202122;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 25px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .header-buttons button {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .dashboard-btn {
+            background: #36c;
+            color: white;
+        }
+
+        .logout-btn {
+            background: #d33;
+            color: white;
+        }
+
+        .dashboard-btn:hover {
+            background: #2455a4;
+        }
+
+        .logout-btn:hover {
+            background: #b52b2b;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .top-section,
+        .list-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .top-section h2 {
+            margin-bottom: 8px;
+        }
+
+        .top-section p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 11px;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #36c;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .button-area {
+            margin-top: 18px;
+        }
+
+        .add-btn,
+        .cancel-btn {
+            border: none;
+            padding: 11px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .add-btn {
+            background: #14866d;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #777;
+            color: white;
+            display: none;
+        }
+
+        .add-btn:hover {
+            background: #0d6f59;
+        }
+
+        .cancel-btn:hover {
+            background: #555;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .list-header h2 {
+            white-space: nowrap;
+        }
+
+        .search-box {
+            width: 300px;
+            padding: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eaecf0;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            border: none;
+            padding: 7px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .edit-btn {
+            background: #36c;
+        }
+
+        .delete-btn {
+            background: #d33;
+        }
+
+        .edit-btn:hover {
+            background: #2455a4;
+        }
+
+        .delete-btn:hover {
+            background: #b52b2b;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        @media (max-width: 700px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .list-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .header-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>BCS Pedia - Manage Subjects</h1>
+
+    <div class="header-buttons">
+        <button
+            type="button"
+            class="dashboard-btn"
+            onclick="goHome()">
+            Home
+        </button>
+
+        <button
+            type="button"
+            class="dashboard-btn"
+            onclick="goDashboard()">
+            Admin Dashboard
+        </button>
+
+        <button
+            type="button"
+            class="logout-btn"
+            onclick="logout()">
+            Logout
+        </button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="top-section">
+        <h2 id="formTitle">Add Subject</h2>
+
+        <p>Add and manage subjects for the BCS Pedia website.</p>
+
+        <form id="subjectForm">
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="subjectName">Subject Name</label>
+
+                    <input
+                        type="text"
+                        id="subjectName"
+                        placeholder="Enter subject name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="semester">Semester</label>
+
+                    <select id="semester" required>
+                        <option value="">Select Semester</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                        <option value="7">Semester 7</option>
+                        <option value="8">Semester 8</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label for="description">Description</label>
+
+                    <textarea
+                        id="description"
+                        placeholder="Enter subject description"></textarea>
+                </div>
+
+            </div>
+
+            <div class="button-area">
+                <button
+                    type="submit"
+                    class="add-btn"
+                    id="submitBtn">
+                    Add Subject
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    id="cancelBtn"
+                    onclick="cancelEdit()">
+                    Cancel Edit
+                </button>
+            </div>
+
+            <div id="message" class="message"></div>
+        </form>
+    </div>
+
+    <div class="list-section">
+
+        <div class="list-header">
+            <h2>Subject List</h2>
+
+            <input
+                type="text"
+                id="searchBox"
+                class="search-box"
+                placeholder="Search subject..."
+                oninput="searchSubjects()">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Subject Name</th>
+                        <th>Semester</th>
+                        <th>Description</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="subjectTableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+"use strict";
+
+// GLOBAL VARIABLES
+let subjects = [];
+let editSubjectId = null;
+
+// ADMIN LOGIN CHECK
+const userData = localStorage.getItem("bcsPediaUser");
+
+if (!userData) {
+    window.location.href = "login.html";
+} else {
+    try {
+        const user = JSON.parse(userData);
+
+        if (!user || user.role !== "admin") {
+            alert("Access denied. Admin only.");
+            window.location.href = "login.html";
+        } else {
+            loadSubjects();
+        }
+    } catch (error) {
+        localStorage.removeItem("bcsPediaUser");
+        window.location.href = "login.html";
+    }
+}
+
+// LOAD SUBJECTS
+function loadSubjects() {
+    const tableBody = document.getElementById("subjectTableBody");
+
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="6" class="empty-message">
+                Loading subjects...
+            </td>
+        </tr>
+    `;
+
+    fetch("backend/get_subjects.php")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Server error");
+            }
+
+            return response.json();
+        })
+        .then(result => {
+            if (!result.success) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-message">
+                            ${escapeHtml(result.message || "Could not load subjects.")}
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            subjects = result.data || [];
+            displaySubjects(subjects);
+        })
+        .catch(error => {
+            console.error(error);
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-message">
+                        Could not load subjects.
+                    </td>
+                </tr>
+            `;
+        });
+}
+
+// DISPLAY SUBJECTS
+function displaySubjects(data) {
+    const tableBody = document.getElementById("subjectTableBody");
+    tableBody.innerHTML = "";
+
+    if (!data || data.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-message">
+                    No subjects found.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    data.forEach(subject => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${escapeHtml(subject.id)}</td>
+
+            <td>${escapeHtml(subject.subject_name)}</td>
+
+            <td>Semester ${escapeHtml(subject.semester)}</td>
+
+            <td>${escapeHtml(subject.description || "-")}</td>
+
+            <td>${formatDate(subject.created_at)}</td>
+
+            <td>
+                <button
+                    type="button"
+                    class="edit-btn"
+                    onclick="editSubject(${Number(subject.id)})">
+                    Edit
+                </button>
+
+                <button
+                    type="button"
+                    class="delete-btn"
+                    onclick="deleteSubject(${Number(subject.id)})">
+                    Delete
+                </button>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+// ADD / UPDATE SUBJECT
+document.getElementById("subjectForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const subjectName = document.getElementById("subjectName").value.trim();
+    const semester = document.getElementById("semester").value;
+    const description = document.getElementById("description").value.trim();
+
+    if (subjectName === "" || semester === "") {
+        showMessage("Please fill all required fields.", "red");
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("subject_name", subjectName);
+    formData.append("semester", semester);
+    formData.append("description", description);
+
+    let url = "backend/add_subject.php";
+
+    if (editSubjectId !== null) {
+        formData.append("id", editSubjectId);
+        url = "backend/update_subject.php";
+    }
+
+    showMessage(
+        editSubjectId !== null ? "Updating subject..." : "Adding subject...",
+        "#333"
+    );
+
+    fetch(url, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Server error");
+        }
+
+        return response.json();
+    })
+    .then(result => {
+        if (result.success) {
+            showMessage(result.message, "green");
+            resetForm();
+            loadSubjects();
+        } else {
+            showMessage(result.message || "Operation failed.", "red");
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        showMessage("Something went wrong.", "red");
+    });
+});
+
+// EDIT SUBJECT
+function editSubject(id) {
+    const subject = subjects.find(
+        item => parseInt(item.id) === parseInt(id)
+    );
+
+    if (!subject) {
+        alert("Subject not found.");
+        return;
+    }
+
+    editSubjectId = parseInt(id);
+
+    document.getElementById("subjectName").value =
+        subject.subject_name || "";
+
+    document.getElementById("semester").value =
+        subject.semester || "";
+
+    document.getElementById("description").value =
+        subject.description || "";
+
+    document.getElementById("formTitle").textContent = "Edit Subject";
+    document.getElementById("submitBtn").textContent = "Update Subject";
+    document.getElementById("cancelBtn").style.display = "inline-block";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+// CANCEL EDIT
+function cancelEdit() {
+    resetForm();
+}
+
+// RESET FORM
+function resetForm() {
+    document.getElementById("subjectForm").reset();
+
+    editSubjectId = null;
+
+    document.getElementById("formTitle").textContent = "Add Subject";
+    document.getElementById("submitBtn").textContent = "Add Subject";
+    document.getElementById("cancelBtn").style.display = "none";
+}
+
+// DELETE SUBJECT
+function deleteSubject(id) {
+    const subject = subjects.find(
+        item => parseInt(item.id) === parseInt(id)
+    );
+
+    if (!subject) {
+        alert("Subject not found.");
+        return;
+    }
+
+    const confirmDelete = confirm(
+        'Are you sure you want to delete "' +
+        subject.subject_name +
+        '"?\n\nWarning: Information under this subject may also be deleted.'
+    );
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("id", id);
+
+    fetch("backend/delete_subject.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Server error");
+        }
+
+        return response.json();
+    })
+    .then(result => {
+        alert(result.message || "Request completed.");
+
+        if (result.success) {
+            loadSubjects();
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        alert("Something went wrong.");
+    });
+}
+
+// SEARCH SUBJECTS
+function searchSubjects() {
+    const search = document.getElementById("searchBox")
+        .value.toLowerCase().trim();
+
+    const filtered = subjects.filter(subject => {
+        const name = String(subject.subject_name || "").toLowerCase();
+        const semester = String(subject.semester || "").toLowerCase();
+        const description = String(subject.description || "").toLowerCase();
+
+        return (
+            name.includes(search) ||
+            semester.includes(search) ||
+            description.includes(search)
+        );
+    });
+
+    displaySubjects(filtered);
+}
+
+// DATE FORMAT
+function formatDate(date) {
+    if (!date) {
+        return "-";
+    }
+
+    const d = new Date(date);
+
+    if (isNaN(d.getTime())) {
+        return escapeHtml(date);
+    }
+
+    return escapeHtml(d.toLocaleString());
+}
+
+// HTML ESCAPE
+function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = String(value ?? "");
+    return div.innerHTML;
+}
+
+// SHOW MESSAGE
+function showMessage(text, color) {
+    const message = document.getElementById("message");
+    message.textContent = text;
+    message.style.color = color;
+}
+
+// HOME BUTTON - WELCOME PAGE
+function goHome() {
+    window.location.href = "welcome.html";
+}
+
+// ADMIN DASHBOARD BUTTON
+function goDashboard() {
+    window.location.href = "admin_dashboard.html";
+}
+
+// LOGOUT
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

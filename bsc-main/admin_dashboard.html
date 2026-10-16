@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - BCS Pedia</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #333;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        .header-buttons button {
+            background: white;
+            color: #222;
+        }
+
+        .header-buttons button:hover {
+            background: #ddd;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: 35px auto;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #666;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .dashboard-card h3 {
+            margin-bottom: 12px;
+        }
+
+        .dashboard-card p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        .dashboard-card button {
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>BCS Pedia - Admin Dashboard</h1>
+
+    <div class="header-buttons">
+        <button type="button" onclick="goHome()">Home</button>
+        <button type="button" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Welcome, Admin!</h2>
+        <p>Manage users, subjects, content and platform activities.</p>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card">
+            <h3>User Management</h3>
+            <p>View registered users and their details.</p>
+            <button type="button" onclick="editUsers()">Manage Users</button>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Subject Management</h3>
+            <p>Manage subjects available on BCS Pedia.</p>
+            <button type="button" onclick="subjectManagement()">Manage Subjects</button>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Content Management</h3>
+            <p>View and manage learning information.</p>
+            <button type="button" onclick="contentManagement()">Manage Content</button>
+        </div>
+
+        <div class="dashboard-card">
+    <h3>Add Information</h3>
+    <p>Add study notes, PDFs, documents, images, videos and other learning materials.</p>
+    <button type="button" onclick="addInformation()">Add Content</button>
+</div>
+
+        <div class="dashboard-card">
+            <h3>Activity History</h3>
+            <p>Review recorded platform activities.</p>
+            <button type="button" onclick="activityHistory()">View History</button>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Teacher Verification</h3>
+            <p>Review teacher registration requests.</p>
+            <button type="button" onclick="teacherVerification()">Verify Teachers</button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+"use strict";
+
+// Check admin login
+const userData = localStorage.getItem("bcsPediaUser");
+
+if (!userData) {
+    window.location.href = "login.html";
+} else {
+    try {
+        const currentUser = JSON.parse(userData);
+
+        if (!currentUser || currentUser.role !== "admin") {
+            alert("Access denied. Admin only.");
+            window.location.href = "login.html";
+        }
+    } catch (error) {
+        localStorage.removeItem("bcsPediaUser");
+        window.location.href = "login.html";
+    }
+}
+
+// Home button: open Welcome page
+function goHome() {
+    window.location.href = "welcome.html";
+}
+
+// User Management
+function editUsers() {
+    window.location.href = "admin_users.html";
+}
+
+// Subject Management
+function subjectManagement() {
+    window.location.href = "admin_subjects.html";
+}
+
+// Content Management
+function contentManagement() {
+    window.location.href = "manage_information.html";
+}
+
+// Activity History
+function activityHistory() {
+    window.location.href = "admin_history.html";
+}
+
+// Teacher Verification
+function teacherVerification() {
+    window.location.href = "admin_teacher_requests.html";
+}
+
+// Logout
+function logout() {
+    localStorage.removeItem("bcsPediaUser");
+    localStorage.removeItem("bcsPediaLoggedIn");
+    localStorage.removeItem("bcsPediaPattern");
+    localStorage.removeItem("bcsPediaYear");
+    localStorage.removeItem("bcsPediaSubject");
+    localStorage.removeItem("bcsPediaSubjectId");
+    localStorage.removeItem("bcsPediaSemester");
+
+    window.location.href = "login.html";
+}
+// Add Information
+function addInformation() {
+    window.location.href = "add_information.html";
+}
+</script>
+
+</body>
+</html>

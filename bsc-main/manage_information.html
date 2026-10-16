@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Information - BCS Pedia</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="main-header">
+
+    <div class="site-logo">
+        BCS <span>Pedia</span>
+    </div>
+
+
+    <div class="user-area">
+
+        <span id="userInfo">
+            Loading...
+        </span>
+
+        <button onclick="goDashboard()">
+            Dashboard
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<main class="home-container">
+
+
+    <section class="welcome-section">
+
+        <h1>
+            Manage Information
+        </h1>
+
+        <p>
+            Edit, update or delete educational information.
+        </p>
+
+    </section>
+
+
+
+    <section class="pattern-info">
+
+        <div class="selected-pattern-card">
+
+            <h2>
+                Information List
+            </h2>
+
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search information..."
+            >
+
+
+            <div id="informationList">
+
+                <div class="information-card">
+
+                    <h3>
+                        Loading information...
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <p id="message"></p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<footer>
+
+    <p>
+        © 2026 BCS Pedia | B.Sc. Computer Science
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================
+   CHECK LOGIN
+   ========================= */
+
+const userData =
+    localStorage.getItem("bcsPediaUser");
+
+
+if (!userData) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+const user =
+    JSON.parse(userData);
+
+
+
+/* =========================
+   CHECK ROLE
+   ========================= */
+
+if (
+    user.role !== "teacher" &&
+    user.role !== "admin"
+) {
+
+    alert(
+        "You do not have permission to access this page."
+    );
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+
+/* =========================
+   SHOW USER
+   ========================= */
+
+document.getElementById(
+    "userInfo"
+).textContent =
+    user.name + " (" + user.role + ")";
+
+
+
+/* =========================
+   GET INFORMATION
+   ========================= */
+
+async function loadInformation() {
+
+    const informationList =
+        document.getElementById(
+            "informationList"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "backend/get_information.php?user_id="
+                + user.id
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            message.textContent =
+                result.message;
+
+            message.style.color =
+                "red";
+
+            return;
+
+        }
+
+
+        informationList.innerHTML = "";
+
+
+        /* =========================
+           NO INFORMATION
+           ========================= */
+
+        if (
+            result.data.length === 0
+        ) {
+
+            informationList.innerHTML = `
+
+                <div class="information-card">
+
+                    <h3>
+                        No Information Found
+                    </h3>
+
+                    <p>
+                        No educational information has been added yet.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* =========================
+           DISPLAY INFORMATION
+           ========================= */
+
+        result.data.forEach(
+            function(item) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "information-card";
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        ${item.title}
+                    </h3>
+
+
+                    <p>
+                        <strong>Subject:</strong>
+                        ${item.subject_name}
+                    </p>
+
+
+                    <p>
+                        <strong>Content Type:</strong>
+                        ${item.content_type}
+                    </p>
+
+
+                    <p>
+                        <strong>Added By:</strong>
+                        ${item.user_name}
+                    </p>
+
+
+                    <p>
+                        <strong>Description:</strong>
+                        ${item.content || "No description available"}
+                    </p>
+
+
+                    ${
+                        item.file_path
+                        ?
+                        `
+                        <p>
+                            <strong>File:</strong>
+
+                            <a
+                                href="${item.file_path}"
+                                target="_blank">
+
+                                ${item.file_name}
+
+                            </a>
+
+                        </p>
+                        `
+                        :
+                        ""
+                    }
+
+
+                    <div class="manage-buttons">
+
+                        <button
+                            onclick="editInformation(${item.id})">
+
+                            Edit
+
+                        </button>
+
+
+                        <button
+                            onclick="deleteInformation(${item.id})">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                informationList.appendChild(
+                    card
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        message.textContent =
+            "Unable to load information.";
+
+
+        message.style.color =
+            "red";
+
+    }
+
+}
+
+
+
+/* =========================
+   EDIT INFORMATION
+   ========================= */
+
+function editInformation(id) {
+
+    window.location.href =
+        "edit_information.html?id=" + id;
+
+}
+
+
+
+/* =========================
+   DELETE INFORMATION
+   ========================= */
+
+async function deleteInformation(id) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this information?"
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "id",
+        id
+    );
+
+
+    formData.append(
+        "user_id",
+        user.id
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "backend/delete_information.php",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (result.success) {
+
+            alert(
+                result.message
+            );
+
+
+            loadInformation();
+
+        } else {
+
+            alert(
+                result.message
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        alert(
+            "Something went wrong while deleting information."
+        );
+
+    }
+
+}
+
+
+
+/* =========================
+   SEARCH
+   ========================= */
+
+document
+    .getElementById("searchInput")
+    .addEventListener(
+        "input",
+        function() {
+
+            const searchValue =
+                this.value.toLowerCase();
+
+
+            const cards =
+                document.querySelectorAll(
+                    ".information-card"
+                );
+
+
+            cards.forEach(
+                function(card) {
+
+                    const text =
+                        card.textContent
+                            .toLowerCase();
+
+
+                    if (
+                        text.includes(searchValue)
+                    ) {
+
+                        card.style.display =
+                            "block";
+
+                    } else {
+
+                        card.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+
+/* =========================
+   GO TO DASHBOARD
+   ========================= */
+
+function goDashboard() {
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+
+/* =========================
+   LOAD INFORMATION
+   ========================= */
+
+loadInformation();
+
+
+</script>
+
+
+</body>
+
+</html>

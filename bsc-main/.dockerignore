@@ -1,0 +1,10 @@
+.git
+.gitignore
+uploads/teacher_proofs/
+*.sql
+*.dump
+.env
+.env.*
+BCS-Pedia-Backups/
+
+backend/db.php

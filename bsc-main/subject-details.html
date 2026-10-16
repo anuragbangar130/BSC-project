@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BCS Pedia - Subject Information</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Add Information Action Button */
+
+        .action-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #ffffff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 15px 0 20px;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, #4338ca, #6d28d9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-btn:focus-visible {
+            outline: 3px solid #a5b4fc;
+            outline-offset: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="main-header">
+
+        <div class="site-logo">
+            BCS <span>Pedia</span>
+        </div>
+
+        <div class="user-area">
+            <button type="button" onclick="goHome()">← All Subjects</button>
+            <button type="button" onclick="logout()">Logout</button>
+        </div>
+
+    </header>
+
+    <main class="home-container">
+
+        <section class="welcome-section">
+
+            <h1 id="subjectName">Subject Information</h1>
+
+            <p id="subjectDetails">
+                Loading subject information...
+            </p>
+
+        </section>
+
+        <section class="subjects-section">
+
+            <h2>Study Material and Information</h2>
+
+            <button
+                type="button"
+                class="action-btn"
+                onclick="openActionPage()">
+                + Add Information
+            </button>
+
+            <div id="informationGrid" class="subject-grid"></div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 BCS Pedia | B.Sc. Computer Science</p>
+    </footer>
+
+    <script>
+        /* =========================
+           SELECTED SUBJECT
+        ========================= */
+
+        const subjectId = localStorage.getItem("bcsPediaSubjectId");
+        const subjectName = localStorage.getItem("bcsPediaSubject") || "Subject";
+        const semester = localStorage.getItem("bcsPediaSemester") || "";
+        const pattern = localStorage.getItem("bcsPediaPattern") || "";
+
+        let user = null;
+
+        try {
+            user = JSON.parse(
+                localStorage.getItem("bcsPediaUser") || "null"
+            );
+        } catch (error) {
+            user = null;
+        }
+
+        if (!user || !user.id) {
+            window.location.replace("login.html");
+        }
+
+        document.getElementById("subjectName").textContent = subjectName;
+
+        document.getElementById("subjectDetails").textContent =
+            (pattern ? pattern.toUpperCase() + " Pattern" : "") +
+            (semester ? " | Semester " + semester : "");
+
+
+        /* =========================
+           HELPERS
+        ========================= */
+
+        function createElement(tag, className, text) {
+            const element = document.createElement(tag);
+
+            if (className) {
+                element.className = className;
+            }
+
+            if (text !== undefined) {
+                element.textContent = text;
+            }
+
+            return element;
+        }
+
+        function getSafeFileUrl(path) {
+            if (!path || typeof path !== "string") {
+                return null;
+            }
+
+            const normalized = path.replace(/\\/g, "/");
+
+            if (
+                normalized.startsWith("/") ||
+                normalized.includes("..") ||
+                !normalized.startsWith("uploads/")
+            ) {
+                return null;
+            }
+
+            return normalized
+                .split("/")
+                .map(part => encodeURIComponent(part))
+                .join("/");
+        }
+
+        function getExtension(path) {
+            const cleanPath = (path || "").split("?")[0];
+            const dot = cleanPath.lastIndexOf(".");
+
+            return dot >= 0
+                ? cleanPath.substring(dot + 1).toLowerCase()
+                : "";
+        }
+
+
+        /* =========================
+           DISPLAY FILE CONTENT
+        ========================= */
+
+        function addFilePreview(container, item) {
+            const fileUrl = getSafeFileUrl(item.file_path);
+
+            if (!fileUrl) {
+                return;
+            }
+
+            const mime = (item.mime_type || "").toLowerCase();
+            const type = (item.content_type || "").toLowerCase();
+            const extension = getExtension(item.file_path);
+
+            const isPdf =
+                mime.includes("pdf") ||
+                extension === "pdf" ||
+                type === "pdf";
+
+            const isImage =
+                mime.startsWith("image/") ||
+                ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg"].includes(extension) ||
+                type === "image" ||
+                type === "images";
+
+            const isAudio =
+                mime.startsWith("audio/") ||
+                ["mp3", "wav", "ogg", "m4a", "aac", "flac"].includes(extension) ||
+                type === "audio" ||
+                type === "audios";
+
+            const isVideo =
+                mime.startsWith("video/") ||
+                ["mp4", "webm", "ogv", "mov", "m4v"].includes(extension) ||
+                type === "video" ||
+                type === "videos";
+
+            const preview = createElement("div", "file-preview");
+
+            preview.style.marginTop = "15px";
+            preview.style.width = "100%";
+
+            if (isImage) {
+                const image = createElement("img");
+
+                image.src = fileUrl;
+                image.alt = item.title || item.file_name || "Study image";
+                image.loading = "lazy";
+                image.style.maxWidth = "100%";
+                image.style.height = "auto";
+                image.style.display = "block";
+                image.style.borderRadius = "8px";
+
+                preview.appendChild(image);
+
+            } else if (isPdf) {
+                const pdf = createElement("iframe");
+
+                pdf.src = fileUrl;
+                pdf.title = item.title || "PDF preview";
+                pdf.width = "100%";
+                pdf.height = "500";
+                pdf.style.border = "1px solid #ddd";
+                pdf.style.borderRadius = "8px";
+
+                preview.appendChild(pdf);
+
+            } else if (isAudio) {
+                const audio = createElement("audio");
+
+                audio.controls = true;
+                audio.preload = "metadata";
+                audio.style.width = "100%";
+
+                const source = createElement("source");
+
+                source.src = fileUrl;
+
+                if (mime) {
+                    source.type = mime;
+                }
+
+                audio.appendChild(source);
+
+                audio.appendChild(
+                    createElement(
+                        "p",
+                        "",
+                        "Your browser does not support audio playback."
+                    )
+                );
+
+                preview.appendChild(audio);
+
+            } else if (isVideo) {
+                const video = createElement("video");
+
+                video.controls = true;
+                video.preload = "metadata";
+                video.style.width = "100%";
+                video.style.maxHeight = "500px";
+
+                const source = createElement("source");
+
+                source.src = fileUrl;
+
+                if (mime) {
+                    source.type = mime;
+                }
+
+                video.appendChild(source);
+
+                video.appendChild(
+                    createElement(
+                        "p",
+                        "",
+                        "Your browser does not support video playback."
+                    )
+                );
+
+                preview.appendChild(video);
+
+            } else {
+                const link = createElement(
+                    "a",
+                    "",
+                    "Open or download: " + (item.file_name || "Study material")
+                );
+
+                link.href = fileUrl;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.download = item.file_name || "";
+
+                preview.appendChild(link);
+            }
+
+            container.appendChild(preview);
+
+            const openLink = createElement(
+                "a",
+                "",
+                "Open file in a new tab"
+            );
+
+            openLink.href = fileUrl;
+            openLink.target = "_blank";
+            openLink.rel = "noopener noreferrer";
+            openLink.style.display = "inline-block";
+            openLink.style.marginTop = "10px";
+
+            container.appendChild(openLink);
+        }
+
+
+        /* =========================
+           LOAD INFORMATION
+        ========================= */
+
+        async function loadInformation() {
+            const grid = document.getElementById("informationGrid");
+
+            grid.replaceChildren();
+
+            if (!subjectId) {
+                grid.appendChild(
+                    createElement(
+                        "p",
+                        "",
+                        "No subject selected. Please return to the subjects page."
+                    )
+                );
+
+                return;
+            }
+
+            const loading = createElement("p", "", "Loading information...");
+
+            grid.appendChild(loading);
+
+            try {
+                const response = await fetch(
+                    "backend/get_information.php?user_id=" +
+                    encodeURIComponent(user.id) +
+                    "&subject_id=" +
+                    encodeURIComponent(subjectId)
+                );
+
+                const result = await response.json();
+
+                grid.replaceChildren();
+
+                if (!response.ok || !result.success) {
+                    grid.appendChild(
+                        createElement(
+                            "p",
+                            "",
+                            result.message || "Unable to load subject information."
+                        )
+                    );
+
+                    return;
+                }
+
+                const information = Array.isArray(result.data)
+                    ? result.data
+                    : [];
+
+                if (information.length === 0) {
+                    grid.appendChild(
+                        createElement(
+                            "p",
+                            "",
+                            "No information has been added for this subject yet."
+                        )
+                    );
+
+                    return;
+                }
+
+                information.forEach(item => {
+                    const card = createElement("article", "subject-card");
+
+                    const details = createElement("div", "subject-content");
+
+                    details.appendChild(
+                        createElement(
+                            "span",
+                            "subject-label",
+                            (item.content_type || "text")
+                                .replace(/_/g, " ")
+                                .toUpperCase()
+                        )
+                    );
+
+                    details.appendChild(
+                        createElement("h3", "", item.title || "Untitled")
+                    );
+
+                    if (item.content) {
+                        const description = createElement(
+                            "p",
+                            "",
+                            item.content
+                        );
+
+                        description.style.whiteSpace = "pre-wrap";
+
+                        details.appendChild(description);
+                    }
+
+                    if (item.file_path) {
+                        addFilePreview(details, item);
+                    }
+
+                    const addedBy = createElement(
+                        "p",
+                        "",
+                        "Added by: " + (item.user_name || "Unknown")
+                    );
+
+                    addedBy.style.marginTop = "15px";
+
+                    details.appendChild(addedBy);
+
+                    if (item.created_at) {
+                        details.appendChild(
+                            createElement(
+                                "small",
+                                "",
+                                "Added on: " +
+                                new Date(item.created_at).toLocaleString()
+                            )
+                        );
+                    }
+
+                    card.appendChild(details);
+
+                    grid.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error("Loading information failed:", error);
+
+                grid.replaceChildren(
+                    createElement(
+                        "p",
+                        "",
+                        "Could not connect to the server. Please try again."
+                    )
+                );
+            }
+        }
+
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        function openActionPage() {
+            window.location.href = "add_information.html";
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        function logout() {
+            [
+                "bcsPediaUser",
+                "bcsPediaLoggedIn",
+                "bcsPediaPattern",
+                "bcsPediaYear",
+                "bcsPediaSubject",
+                "bcsPediaSubjectId",
+                "bcsPediaSemester"
+            ].forEach(key => localStorage.removeItem(key));
+
+            window.location.href = "login.html";
+        }
+
+
+        /* =========================
+           START
+        ========================= */
+
+        if (user && user.id) {
+            loadInformation();
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+# Database credentials
+backend/db.php
+
+# Environment and secret files
+.env
+.env.*
+
+# Database backups
+*.sql
+*.dump
+
+# Local configuration
+config.local.php
+
+# Private teacher verification documents
+uploads/teacher_proofs/

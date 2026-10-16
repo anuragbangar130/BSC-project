@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - BCS Pedia</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="main-header">
+
+    <div class="site-logo">
+        BCS <span>Pedia</span>
+    </div>
+
+
+    <div class="user-area">
+
+        <span id="userInfo">
+            Loading...
+        </span>
+
+        <button onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<main class="home-container">
+
+
+    <section class="welcome-section">
+
+        <h1 id="welcomeMessage">
+            Welcome
+        </h1>
+
+        <p id="roleName">
+            Role:
+        </p>
+
+        <p id="permissionText">
+            Loading permissions...
+        </p>
+
+    </section>
+
+
+
+    <section class="pattern-info">
+
+
+        <!-- ADD INFORMATION -->
+
+        <div class="selected-pattern-card">
+
+            <h2>
+                Add Information
+            </h2>
+
+            <p>
+                Add educational information
+                to the selected topic.
+            </p>
+
+            <button onclick="addInformation()">
+                Add Information
+            </button>
+
+        </div>
+
+
+
+        <!-- MANAGE INFORMATION -->
+
+        <div
+            class="selected-pattern-card"
+            id="manageCard">
+
+            <h2>
+                Manage Information
+            </h2>
+
+            <p>
+                Edit, update or delete
+                educational information.
+            </p>
+
+            <button onclick="manageInformation()">
+                Manage Information
+            </button>
+
+        </div>
+
+
+
+        <!-- ACTIVITY HISTORY -->
+
+        <div class="selected-pattern-card">
+
+            <h2>
+                Activity History
+            </h2>
+
+            <p>
+                View your information activity.
+            </p>
+
+            <button onclick="viewHistory()">
+                View History
+            </button>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<footer>
+
+    <p>
+        © 2026 BCS Pedia | B.Sc. Computer Science
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================
+   CHECK LOGIN
+   ========================= */
+
+const userData =
+    localStorage.getItem("bcsPediaUser");
+
+
+if (!userData) {
+
+    window.location.href =
+        "login.html";
+
+} else {
+
+
+    const user =
+        JSON.parse(userData);
+
+
+
+    /* =========================
+       ADMIN
+       ========================= */
+
+    if (user.role === "admin") {
+
+        window.location.href =
+            "admin_dashboard.html";
+
+    }
+
+
+
+    /* =========================
+       VALID NORMAL ROLES
+       ========================= */
+
+    if (
+        user.role !== "student" &&
+        user.role !== "teacher"
+    ) {
+
+        localStorage.removeItem(
+            "bcsPediaUser"
+        );
+
+        window.location.href =
+            "login.html";
+
+    }
+
+
+
+    /* =========================
+       USER INFORMATION
+       ========================= */
+
+    document.getElementById(
+        "userInfo"
+    ).textContent =
+        user.name +
+        " (" +
+        user.role +
+        ")";
+
+
+    document.getElementById(
+        "welcomeMessage"
+    ).textContent =
+        "Welcome, " +
+        user.name;
+
+
+    document.getElementById(
+        "roleName"
+    ).textContent =
+        "Role: " +
+        user.role;
+
+
+
+    const permissionText =
+        document.getElementById(
+            "permissionText"
+        );
+
+
+    const manageCard =
+        document.getElementById(
+            "manageCard"
+        );
+
+
+
+    /* =========================
+       STUDENT
+       ========================= */
+
+    if (user.role === "student") {
+
+        permissionText.textContent =
+            "You can add information and view your activity history.";
+
+        manageCard.style.display =
+            "none";
+
+    }
+
+
+
+    /* =========================
+       TEACHER
+       ========================= */
+
+    if (user.role === "teacher") {
+
+        permissionText.textContent =
+            "You can add, edit, update and delete information.";
+
+        manageCard.style.display =
+            "block";
+
+    }
+
+}
+
+
+
+/* =========================
+   ADD INFORMATION
+   ========================= */
+
+function addInformation() {
+
+    window.location.href =
+        "add_information.html";
+
+}
+
+
+
+/* =========================
+   MANAGE INFORMATION
+   ========================= */
+
+function manageInformation() {
+
+    window.location.href =
+        "manage_information.html";
+
+}
+
+
+
+/* =========================
+   ACTIVITY HISTORY
+   ========================= */
+
+function viewHistory() {
+
+    window.location.href =
+        "history.html";
+
+}
+
+
+
+/* =========================
+   LOGOUT
+   ========================= */
+
+function logout() {
+
+    localStorage.removeItem(
+        "bcsPediaUser"
+    );
+
+    localStorage.removeItem(
+        "bcsPediaPattern"
+    );
+
+    localStorage.removeItem(
+        "bcsPediaYear"
+    );
+
+    localStorage.removeItem(
+        "bcsPediaSubject"
+    );
+
+    localStorage.removeItem(
+        "bcsPediaSemester"
+    );
+
+    localStorage.removeItem(
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

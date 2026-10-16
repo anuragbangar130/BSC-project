@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Information - BCS Pedia</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .edit-container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .edit-container h1 {
+            margin-bottom: 10px;
+        }
+
+        .edit-container .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 220px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .save-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .cancel-btn {
+            background: #e5e7eb;
+            color: #222;
+        }
+
+        .cancel-btn:hover {
+            background: #d1d5db;
+        }
+
+        .current-file {
+            margin-top: 8px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        #message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .edit-container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="logo">
+            BCS Pedia
+        </div>
+
+        <div class="header-right">
+
+            <span id="userName"></span>
+
+            <button onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="edit-container">
+
+        <h1>
+            Edit Information
+        </h1>
+
+        <p class="subtitle">
+            Update the information and save your changes.
+        </p>
+
+
+        <form id="editForm">
+
+
+            <!-- TITLE -->
+
+            <div class="form-group">
+
+                <label for="title">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CONTENT TYPE -->
+
+            <div class="form-group">
+
+                <label for="content_type">
+                    Content Type
+                </label>
+
+                <select
+                    id="content_type"
+                    name="content_type"
+                    required
+                >
+
+                    <option value="text">
+                        Text / Notes
+                    </option>
+
+                    <option value="pdf">
+                        PDF
+                    </option>
+
+                    <option value="document">
+                        Document
+                    </option>
+
+                    <option value="image">
+                        Image
+                    </option>
+
+                    <option value="audio">
+                        Audio
+                    </option>
+
+                    <option value="video">
+                        Video
+                    </option>
+
+                    <option value="question_paper">
+                        Question Paper
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <div class="form-group">
+
+                <label for="content">
+                    Information / Description
+                </label>
+
+                <textarea
+                    id="content"
+                    name="content"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- FILE -->
+
+            <div class="form-group">
+
+                <label for="file">
+                    Replace File (Optional)
+                </label>
+
+                <input
+                    type="file"
+                    id="file"
+                    name="file"
+                >
+
+                <div
+                    id="currentFile"
+                    class="current-file"
+                >
+                    No file attached.
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    Save Changes
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="goBack()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <div id="message"></div>
+
+    </main>
+
+
+    <script>
+
+
+        /* =========================
+           CHECK LOGIN
+           ========================= */
+
+        const userData =
+            localStorage.getItem("bcsPediaUser");
+
+
+        if (!userData) {
+
+            window.location.href =
+                "login.html";
+
+        }
+
+
+        const user =
+            JSON.parse(userData);
+
+
+        /* =========================
+           CHECK ROLE
+           ========================= */
+
+        if (
+            user.role !== "teacher" &&
+            user.role !== "admin"
+        ) {
+
+            alert(
+                "You do not have permission to edit information."
+            );
+
+            window.location.href =
+                "dashboard.html";
+
+        }
+
+
+        /* =========================
+           SHOW USER
+           ========================= */
+
+        document.getElementById(
+            "userName"
+        ).textContent =
+            user.name + " (" + user.role + ")";
+
+
+        /* =========================
+           GET CONTENT ID
+           ========================= */
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const contentId =
+            params.get("id");
+
+
+        if (!contentId) {
+
+            alert(
+                "Information ID is missing."
+            );
+
+            window.location.href =
+                "manage_information.html";
+
+        }
+
+
+        /* =========================
+           LOAD INFORMATION
+           ========================= */
+
+        async function loadInformation() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "backend/get_information_by_id.php?id=" +
+                        encodeURIComponent(contentId)
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!result.success) {
+
+                    alert(
+                        result.message
+                    );
+
+                    window.location.href =
+                        "manage_information.html";
+
+                    return;
+
+                }
+
+
+                const information =
+                    result.data;
+
+
+                document.getElementById(
+                    "title"
+                ).value =
+                    information.title || "";
+
+
+                document.getElementById(
+                    "content_type"
+                ).value =
+                    information.content_type || "text";
+
+
+                document.getElementById(
+                    "content"
+                ).value =
+                    information.content || "";
+
+
+                if (information.file_name) {
+
+                    document.getElementById(
+                        "currentFile"
+                    ).textContent =
+                        "Current file: " +
+                        information.file_name;
+
+                } else {
+
+                    document.getElementById(
+                        "currentFile"
+                    ).textContent =
+                        "No file attached.";
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Could not load information."
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           SAVE CHANGES
+           ========================= */
+
+        document
+            .getElementById("editForm")
+            .addEventListener(
+                "submit",
+                async function(event) {
+
+                    event.preventDefault();
+
+
+                    const formData =
+                        new FormData();
+
+
+                    formData.append(
+                        "id",
+                        contentId
+                    );
+
+
+                    formData.append(
+                        "user_id",
+                        user.id
+                    );
+
+
+                    formData.append(
+                        "title",
+                        document
+                            .getElementById("title")
+                            .value
+                            .trim()
+                    );
+
+
+                    formData.append(
+                        "content_type",
+                        document
+                            .getElementById("content_type")
+                            .value
+                    );
+
+
+                    formData.append(
+                        "content",
+                        document
+                            .getElementById("content")
+                            .value
+                            .trim()
+                    );
+
+
+                    const fileInput =
+                        document.getElementById(
+                            "file"
+                        );
+
+
+                    if (
+                        fileInput.files.length > 0
+                    ) {
+
+                        formData.append(
+                            "file",
+                            fileInput.files[0]
+                        );
+
+                    }
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "backend/update_information.php",
+                                {
+                                    method: "POST",
+                                    body: formData
+                                }
+                            );
+
+
+                        const result =
+                            await response.json();
+
+
+                        const message =
+                            document.getElementById(
+                                "message"
+                            );
+
+
+                        message.style.display =
+                            "block";
+
+
+                        if (result.success) {
+
+                            message.textContent =
+                                "Information updated successfully.";
+
+                            message.style.background =
+                                "#dcfce7";
+
+                            message.style.color =
+                                "#166534";
+
+
+                            setTimeout(
+                                function() {
+
+                                    window.location.href =
+                                        "manage_information.html";
+
+                                },
+                                1000
+                            );
+
+
+                        } else {
+
+                            message.textContent =
+                                result.message ||
+                                "Information could not be updated.";
+
+                            message.style.background =
+                                "#fee2e2";
+
+                            message.style.color =
+                                "#991b1b";
+
+                        }
+
+
+                    } catch (error) {
+
+                        console.error(error);
+
+
+                        const message =
+                            document.getElementById(
+                                "message"
+                            );
+
+
+                        message.style.display =
+                            "block";
+
+
+                        message.textContent =
+                            "Something went wrong.";
+
+                        message.style.background =
+                            "#fee2e2";
+
+                        message.style.color =
+                            "#991b1b";
+
+                    }
+
+                }
+            );
+
+
+        /* =========================
+           GO BACK
+           ========================= */
+
+        function goBack() {
+
+            window.location.href =
+                "manage_information.html";
+
+        }
+
+
+        /* =========================
+           LOGOUT
+           ========================= */
+
+        function logout() {
+
+            localStorage.removeItem(
+                "bcsPediaUser"
+            );
+
+            localStorage.removeItem(
+                "bcsPediaPattern"
+            );
+
+            localStorage.removeItem(
+                "bcsPediaYear"
+            );
+
+            localStorage.removeItem(
+                "bcsPediaSubject"
+            );
+
+            localStorage.removeItem(
+                "bcsPediaSemester"
+            );
+
+            window.location.href =
+                "login.html";
+
+        }
+
+
+        /* =========================
+           START
+           ========================= */
+
+        loadInformation();
+
+    </script>
+
+</body>
+
+</html>

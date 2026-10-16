@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>BCS Pedia - Subjects</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+<body>
+
+<header class="top-header">
+
+    <div class="logo-box">
+
+        <div class="logo">
+            BC
+        </div>
+
+        <div>
+
+            <h2>
+                BCS Pedia
+            </h2>
+
+            <p>
+                Computer Science Learning Hub
+            </p>
+
+        </div>
+
+    </div>
+
+    <button
+        class="home-btn"
+        onclick="goHome()">
+
+        ⌂ Home
+
+    </button>
+
+</header>
+
+
+<main class="subject-page">
+
+
+    <!-- PAGE HEADING -->
+
+    <section class="page-heading">
+
+        <span>
+            ACADEMIC SUBJECTS
+        </span>
+
+        <h1 id="pageTitle">
+            Subjects
+        </h1>
+
+        <p>
+            Explore subjects, units, notes and study material.
+        </p>
+
+    </section>
+
+
+    <!-- PATTERN AND YEAR -->
+
+    <section class="info-box">
+
+        <div>
+
+            <small>
+                Pattern
+            </small>
+
+            <strong id="patternName">
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <small>
+                Year
+            </small>
+
+            <strong id="yearName">
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- SEMESTER -->
+
+    <section class="semester-section">
+
+        <div class="semester-header">
+
+            <h2>
+                Select Semester
+            </h2>
+
+            <p>
+                Choose a semester to view subjects.
+            </p>
+
+        </div>
+
+
+        <div
+            class="semester-buttons"
+            id="semesterButtons">
+        </div>
+
+    </section>
+
+
+    <!-- SUBJECTS -->
+
+    <section class="subjects-section">
+
+        <div class="section-title">
+
+            <div>
+
+                <span>
+                    SUBJECT LIST
+                </span>
+
+                <h2 id="semesterTitle">
+                    Semester Subjects
+                </h2>
+
+            </div>
+
+
+            <div
+                class="subject-count"
+                id="subjectCount">
+            </div>
+
+        </div>
+
+
+        <div
+            id="subjectGrid"
+            class="subject-grid">
+        </div>
+
+    </section>
+
+
+    <!-- BACK -->
+
+    <button
+        class="back-btn"
+        onclick="goBack()">
+
+        ← Back to Year Selection
+
+    </button>
+
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 BCS Pedia |
+        B.Sc. Computer Science Learning Platform
+    </p>
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   SELECTED PATTERN AND YEAR
+   ===================================================== */
+
+const selectedPattern =
+    (
+        localStorage.getItem("bcsPediaPattern")
+        || "NEP"
+    ).toLowerCase();
+
+
+const selectedYear =
+    localStorage.getItem("bcsPediaYear")
+    || "FY";
+
+
+/* =====================================================
+   PATTERN DISPLAY
+   ===================================================== */
+
+const patternDisplay = {
+
+    autonomous:
+        "Autonomous Pattern",
+
+    nep:
+        "NEP 2024 Pattern"
+
+};
+
+
+/* =====================================================
+   YEAR DISPLAY
+   ===================================================== */
+
+const yearDisplay = {
+
+    FY:
+        "First Year (FY B.Sc. CS)",
+
+    SY:
+        "Second Year (SY B.Sc. CS)",
+
+    TY:
+        "Third Year (TY B.Sc. CS)"
+
+};
+
+
+/* =====================================================
+   DISPLAY PATTERN AND YEAR
+   ===================================================== */
+
+document.getElementById(
+    "patternName"
+).textContent =
+    patternDisplay[selectedPattern]
+    || selectedPattern;
+
+
+document.getElementById(
+    "yearName"
+).textContent =
+    yearDisplay[selectedYear]
+    || selectedYear;
+
+
+document.getElementById(
+    "pageTitle"
+).textContent =
+    yearDisplay[selectedYear]
+    || "Subjects";
+
+
+/* =====================================================
+   SEMESTER CONFIGURATION
+   ===================================================== */
+
+const semesterConfig = {
+
+    FY: [1, 2],
+
+    SY: [3, 4],
+
+    TY: [5, 6]
+
+};
+
+
+/* =====================================================
+   DATABASE SUBJECTS
+   ===================================================== */
+
+let allSubjects = [];
+
+
+/* =====================================================
+   FETCH SUBJECTS FROM DATABASE
+   ===================================================== */
+
+async function loadSubjects() {
+
+    try {
+
+        const response =
+            await fetch(
+                "backend/get_subjects.php?pattern="
+                + encodeURIComponent(selectedPattern)
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            document.getElementById(
+                "subjectGrid"
+            ).innerHTML = `
+                <p>
+                    ${result.message}
+                </p>
+            `;
+
+            return;
+
+        }
+
+
+        allSubjects =
+            result.data || [];
+
+
+        createSemesterButtons();
+
+
+        showSubjects(
+            semesterConfig[selectedYear][0]
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "subjectGrid"
+        ).innerHTML = `
+            <p>
+                Unable to load subjects.
+                Please try again.
+            </p>
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE SEMESTER BUTTONS
+   ===================================================== */
+
+function createSemesterButtons() {
+
+    const container =
+        document.getElementById(
+            "semesterButtons"
+        );
+
+
+    container.innerHTML = "";
+
+
+    const semesters =
+        semesterConfig[selectedYear];
+
+
+    if (!semesters) {
+        return;
+    }
+
+
+    semesters.forEach(
+        (semester, index) => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "semester-btn";
+
+
+            if (index === 0) {
+
+                button.classList.add(
+                    "active"
+                );
+
+            }
+
+
+            button.innerHTML = `
+
+                <span>
+                    ${String(semester)
+                        .padStart(2, "0")}
+                </span>
+
+                Semester ${semester}
+
+            `;
+
+
+            button.onclick =
+                function () {
+
+                    showSubjects(
+                        semester
+                    );
+
+                };
+
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SHOW SUBJECTS
+   ===================================================== */
+
+function showSubjects(semester) {
+
+    const grid =
+        document.getElementById(
+            "subjectGrid"
+        );
+
+
+    const subjectList =
+        allSubjects.filter(
+            subject =>
+                Number(subject.semester)
+                === Number(semester)
+        );
+
+
+    /* SEMESTER TITLE */
+
+    document.getElementById(
+        "semesterTitle"
+    ).textContent =
+        "Semester " +
+        semester +
+        " Subjects";
+
+
+    /* SUBJECT COUNT */
+
+    document.getElementById(
+        "subjectCount"
+    ).textContent =
+        subjectList.length +
+        " Subjects";
+
+
+    /* ACTIVE BUTTON */
+
+    const buttons =
+        document.querySelectorAll(
+            ".semester-btn"
+        );
+
+
+    buttons.forEach(
+        button => {
+
+            button.classList.remove(
+                "active"
+            );
+
+            if (
+                button.textContent
+                    .includes(
+                        "Semester " +
+                        semester
+                    )
+            ) {
+
+                button.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* NO SUBJECTS */
+
+    if (subjectList.length === 0) {
+
+        grid.innerHTML = `
+            <p>
+                No subjects available
+                for this semester.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    /* CLEAR GRID */
+
+    grid.innerHTML = "";
+
+
+    /* CREATE SUBJECT CARDS */
+
+    subjectList.forEach(
+        (subject, index) => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "subject-card";
+
+
+            card.innerHTML = `
+
+                <div class="subject-number">
+                    ${String(index + 1)
+                        .padStart(2, "0")}
+                </div>
+
+
+                <div class="book-icon">
+                    📘
+                </div>
+
+
+                <div class="subject-content">
+
+                    <span class="subject-label">
+                        SUBJECT ${index + 1}
+                    </span>
+
+
+                    <h3>
+                        ${subject.subject_name}
+                    </h3>
+
+
+                    <p>
+                        Notes • Units • Study Material
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="explore-btn">
+
+                    Explore →
+
+                </button>
+
+            `;
+
+
+            const exploreButton =
+                card.querySelector(
+                    ".explore-btn"
+                );
+
+
+            exploreButton.onclick =
+                function () {
+
+                    openSubject(
+                        subject
+                    );
+
+                };
+
+
+            grid.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   OPEN SUBJECT
+   ===================================================== */
+
+function openSubject(subject) {
+
+    localStorage.setItem(
+        "bcsPediaSubject",
+        subject.subject_name
+    );
+
+
+    localStorage.setItem(
+        "bcsPediaSubjectId",
+        String(subject.id)
+    );
+
+
+    localStorage.setItem(
+        "bcsPediaSemester",
+        String(subject.semester)
+    );
+
+
+    localStorage.setItem(
+        "bcsPediaPattern",
+        subject.pattern
+    );
+
+
+    window.location.href =
+        "subject-details.html";
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
+
+function goHome() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+function goBack() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* =====================================================
+   START
+   ===================================================== */
+
+loadSubjects();
+
+</script>
+
+
+</body>
+
+</html>

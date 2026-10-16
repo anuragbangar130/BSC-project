@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - BCS Pedia</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <div class="auth-page">
+
+
+        <div class="auth-card">
+
+
+            <!-- Logo -->
+
+            <div class="logo">
+                BCS <span>Pedia</span>
+            </div>
+
+
+            <!-- Heading -->
+
+            <h2>
+                Welcome Back
+            </h2>
+
+            <p class="welcome-text">
+                Login to continue to BCS Pedia
+            </p>
+
+
+            <!-- Login Form -->
+
+            <form id="loginForm" autocomplete="off">
+
+
+                <!-- Username -->
+
+                <div class="input-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Enter your username"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="input-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Message -->
+
+                <p id="loginMessage"></p>
+
+
+                <!-- Login Button -->
+
+                <button
+                    type="submit"
+                    class="auth-button">
+
+                    Login
+
+                </button>
+
+
+            </form>
+
+
+            <!-- Forgot Password -->
+
+            <div class="forgot-password">
+
+                <a href="forgot_password.html">
+                    Forgot Password?
+                </a>
+
+            </div>
+
+
+            <!-- Create Account -->
+
+            <div class="login-option">
+
+                <span>
+                    Don't have an account?
+                </span>
+
+                <a href="create_account.html">
+                    Create Account
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+
+        document
+        .getElementById("loginForm")
+        .addEventListener(
+            "submit",
+            async function(event) {
+
+
+                event.preventDefault();
+
+
+                const username =
+                    document
+                    .getElementById("username")
+                    .value
+                    .trim();
+
+
+                const password =
+                    document
+                    .getElementById("password")
+                    .value;
+
+
+                const message =
+                    document
+                    .getElementById("loginMessage");
+
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "username",
+                    username
+                );
+
+
+                formData.append(
+                    "password",
+                    password
+                );
+
+
+                try {
+
+
+                    const response =
+                        await fetch(
+                            "backend/login.php",
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (result.success) {
+
+
+                        message.textContent =
+                            result.message;
+
+
+                        message.style.color =
+                            "green";
+
+
+                        /*
+                         * Save logged-in user
+                         * Password is NOT saved.
+                         */
+
+                        localStorage.setItem(
+                            "bcsPediaUser",
+                            JSON.stringify(
+                                result.user
+                            )
+                        );
+
+
+                        /*
+                         * ROLE-BASED REDIRECT
+                         */
+
+                        setTimeout(
+                            function() {
+
+
+                                /*
+                                 * ADMIN
+                                 */
+
+                                if (
+                                    result.user.role ===
+                                    "admin"
+                                ) {
+
+                                    window.location.href =
+                                        "admin_dashboard.html";
+
+                                }
+
+
+                                /*
+                                 * STUDENT / TEACHER
+                                 */
+
+                                else {
+
+                                    window.location.href =
+                                        "pattern.html";
+
+                                }
+
+
+                            },
+                            800
+                        );
+
+
+                    } else {
+
+
+                        message.textContent =
+                            result.message;
+
+
+                        message.style.color =
+                            "red";
+
+
+                    }
+
+
+                } catch (error) {
+
+
+                    message.textContent =
+                        "Something went wrong.";
+
+
+                    message.style.color =
+                        "red";
+
+
+                    console.error(error);
+
+                }
+
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>
+

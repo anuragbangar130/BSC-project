@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Information - BCS Pedia</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .add-page {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .add-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .add-header h1 {
+            margin-bottom: 10px;
+        }
+
+        .add-header p {
+            color: #666;
+        }
+
+        .add-form-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #555;
+        }
+
+        .file-info {
+            font-size: 13px;
+            color: #777;
+            margin-top: 6px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .form-buttons button {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .add-button {
+            background: #222;
+            color: white;
+        }
+
+        .add-button:hover {
+            opacity: 0.85;
+        }
+
+        .cancel-button {
+            background: #eee;
+            color: #222;
+        }
+
+        .cancel-button:hover {
+            background: #ddd;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header class="main-header">
+
+    <div class="site-logo">
+        BCS <span>Pedia</span>
+    </div>
+
+    <div class="user-area">
+
+        <span id="userInfo">
+            Loading...
+        </span>
+
+        <button onclick="goDashboard()">
+            Dashboard
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="add-page">
+
+    <div class="add-header">
+
+        <h1>
+            Add Information
+        </h1>
+
+        <p>
+            Add educational information and study materials to BCS Pedia.
+        </p>
+
+    </div>
+
+
+    <div class="add-form-card">
+
+        <form id="informationForm">
+
+
+            <!-- SUBJECT -->
+
+            <div class="form-group">
+
+                <label for="subject">
+                    Subject
+                </label>
+
+                <select id="subject" required>
+
+                    <option value="">
+                        Select Subject
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <div class="form-group">
+
+                <label for="title">
+                    Title
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="Enter information title"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CONTENT TYPE -->
+
+            <div class="form-group">
+
+                <label for="contentType">
+                    Content Type
+                </label>
+
+                <select id="contentType" required>
+
+                    <option value="">
+                        Select content type
+                    </option>
+
+                    <option value="text">
+                        Text / Notes
+                    </option>
+
+                    <option value="pdf">
+                        PDF
+                    </option>
+
+                    <option value="document">
+                        Document
+                    </option>
+
+                    <option value="image">
+                        Image
+                    </option>
+
+                    <option value="audio">
+                        Audio
+                    </option>
+
+                    <option value="video">
+                        Video
+                    </option>
+
+                    <option value="question_paper">
+                        Question Paper
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description / Information
+                </label>
+
+                <textarea
+                    id="description"
+                    placeholder="Enter educational information or description"
+                ></textarea>
+
+            </div>
+
+
+            <!-- FILE -->
+
+            <div class="form-group">
+
+                <label for="file">
+                    Upload File
+                </label>
+
+                <input
+                    type="file"
+                    id="file"
+                >
+
+                <div class="file-info">
+                    Upload PDF, document, image, audio, video,
+                    question paper or other supported files.
+                </div>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-buttons">
+
+                <button
+                    type="submit"
+                    class="add-button"
+                >
+                    Add Information
+                </button>
+
+                <button
+                    type="button"
+                    class="cancel-button"
+                    onclick="goDashboard()"
+                >
+                    Cancel
+                </button>
+
+            </div>
+
+
+            <p id="message"></p>
+
+        </form>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 BCS Pedia | B.Sc. Computer Science
+    </p>
+
+</footer>
+
+
+<script>
+
+
+/* =========================
+   CHECK LOGIN
+   ========================= */
+
+const userData =
+    localStorage.getItem("bcsPediaUser");
+
+
+if (!userData) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+const user =
+    JSON.parse(userData);
+
+
+/* =========================
+   SHOW USER
+   ========================= */
+
+document.getElementById("userInfo").textContent =
+    user.name + " (" + user.role + ")";
+
+
+/* =========================
+   ELEMENTS
+   ========================= */
+
+const subjectSelect =
+    document.getElementById("subject");
+
+
+/* =========================
+   LOAD SUBJECTS
+   ========================= */
+
+async function loadSubjects() {
+
+    try {
+
+        const pattern =
+            localStorage.getItem("bcsPediaPattern") || "NEP";
+
+
+        const response =
+            await fetch(
+                "backend/get_subjects.php?pattern=" +
+                encodeURIComponent(pattern)
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            alert(
+                "Unable to load subjects."
+            );
+
+            return;
+
+        }
+
+
+        subjectSelect.innerHTML =
+            '<option value="">Select Subject</option>';
+
+
+        result.data.forEach(subject => {
+
+            const option =
+                document.createElement("option");
+
+
+            option.value =
+                subject.id;
+
+
+            option.textContent =
+                subject.subject_name;
+
+
+            subjectSelect.appendChild(
+                option
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        alert(
+            "Error loading subjects."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   FORM SUBMIT
+   ========================= */
+
+document
+    .getElementById("informationForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const message =
+                document.getElementById("message");
+
+
+            const subjectId =
+                subjectSelect.value;
+
+
+            const title =
+                document
+                .getElementById("title")
+                .value
+                .trim();
+
+
+            const contentType =
+                document
+                .getElementById("contentType")
+                .value;
+
+
+            const description =
+                document
+                .getElementById("description")
+                .value
+                .trim();
+
+
+            const file =
+                document
+                .getElementById("file")
+                .files[0];
+
+
+            if (!subjectId) {
+
+                message.textContent =
+                    "Please select a subject.";
+
+
+                message.style.color =
+                    "red";
+
+
+                return;
+
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "subject_id",
+                subjectId
+            );
+
+
+            formData.append(
+                "title",
+                title
+            );
+
+
+            formData.append(
+                "content_type",
+                contentType
+            );
+
+
+            formData.append(
+                "description",
+                description
+            );
+
+
+            formData.append(
+                "user_id",
+                user.id
+            );
+
+
+            if (file) {
+
+                formData.append(
+                    "file",
+                    file
+                );
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "backend/add_information.php",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (result.success) {
+
+                    message.textContent =
+                        result.message;
+
+
+                    message.style.color =
+                        "green";
+
+
+                    document
+                        .getElementById(
+                            "informationForm"
+                        )
+                        .reset();
+
+
+                } else {
+
+                    message.textContent =
+                        result.message;
+
+
+                    message.style.color =
+                        "red";
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                message.textContent =
+                    "Something went wrong.";
+
+
+                message.style.color =
+                    "red";
+
+            }
+
+        }
+    );
+
+
+/* =========================
+   DASHBOARD
+   ========================= */
+
+function goDashboard() {
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+/* =========================
+   START
+   ========================= */
+
+loadSubjects();
+
+</script>
+
+
+</body>
+
+</html>

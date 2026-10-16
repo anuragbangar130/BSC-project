@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCS Pedia - Subjects</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="main-header">
+    <div class="site-logo">BCS <span>Pedia</span></div>
+
+    <div class="user-area">
+        <span id="selectedPattern">Loading...</span>
+        <button type="button" onclick="window.location.href='search.html'">
+            Search
+        </button>
+        <button type="button" onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<main class="home-container">
+
+    <section class="welcome-section">
+        <h1 id="pageHeading">BCS Pedia</h1>
+        <p>Choose a subject to access its notes and study material.</p>
+    </section>
+
+    <div id="loadingMessage">
+        Loading subjects...
+    </div>
+
+    <div id="semesterContainer"></div>
+
+</main>
+
+<footer>
+    <p>© 2026 BCS Pedia | B.Sc. Computer Science</p>
+</footer>
+
+<script>
+/* =========================
+   LOGIN CHECK
+========================= */
+
+const loggedInUser = localStorage.getItem("bcsPediaUser");
+
+if (!loggedInUser) {
+    window.location.replace("login.html");
+}
+
+/* =========================
+   SELECTED PATTERN
+========================= */
+
+const selectedPattern =
+    (localStorage.getItem("bcsPediaPattern") || "").toLowerCase();
+
+const patternNames = {
+    autonomous: "Autonomous Pattern",
+    nep: "NEP 2024 Pattern"
+};
+
+if (!patternNames[selectedPattern]) {
+    window.location.replace("pattern.html");
+}
+
+document.getElementById("selectedPattern").textContent =
+    patternNames[selectedPattern] || "";
+
+document.getElementById("pageHeading").textContent =
+    patternNames[selectedPattern] + " - Subjects";
+
+/* =========================
+   LOAD SUBJECTS
+========================= */
+
+async function loadSubjects() {
+    const container = document.getElementById("semesterContainer");
+    const loading = document.getElementById("loadingMessage");
+
+    try {
+        const response = await fetch(
+            "backend/get_subjects.php?pattern=" +
+            encodeURIComponent(selectedPattern)
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Unable to load subjects.");
+        }
+
+        const subjects = Array.isArray(result.data) ? result.data : [];
+
+        container.replaceChildren();
+
+        // Display all six semesters on the same page.
+        for (let semester = 1; semester <= 6; semester++) {
+            const section = document.createElement("section");
+            section.className = "subjects-section";
+            section.style.marginBottom = "30px";
+
+            const heading = document.createElement("h2");
+            heading.textContent = "Semester " + semester;
+            section.appendChild(heading);
+
+            const grid = document.createElement("div");
+            grid.className = "subject-grid";
+
+            const semesterSubjects = subjects.filter(
+                subject => Number(subject.semester) === semester
+            );
+
+            if (semesterSubjects.length === 0) {
+                const message = document.createElement("p");
+                message.textContent =
+                    "No subjects available for this semester.";
+                section.appendChild(message);
+            } else {
+                semesterSubjects.forEach((subject, index) => {
+                    const card = document.createElement("div");
+                    card.className = "subject-card";
+
+                    const icon = document.createElement("div");
+                    icon.className = "book-icon";
+                    icon.textContent = "📘";
+
+                    const details = document.createElement("div");
+                    details.className = "subject-content";
+
+                    const label = document.createElement("span");
+                    label.className = "subject-label";
+                    label.textContent = "SUBJECT " + (index + 1);
+
+                    const title = document.createElement("h3");
+                    title.textContent = subject.subject_name;
+
+                    const description = document.createElement("p");
+                    description.textContent =
+                        subject.description || "Study material and information";
+
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "explore-btn";
+                    button.textContent = "View Information →";
+
+                    button.addEventListener("click", () => {
+                        openSubject(subject);
+                    });
+
+                    details.append(label, title, description, button);
+                    card.append(icon, details);
+                    grid.appendChild(card);
+                });
+
+                section.appendChild(grid);
+            }
+
+            container.appendChild(section);
+        }
+
+        loading.textContent = subjects.length
+            ? ""
+            : "No subjects found for this pattern.";
+
+    } catch (error) {
+        console.error("Subject loading error:", error);
+        loading.textContent =
+            "Unable to load subjects. Please check your connection and try again.";
+    }
+}
+
+/* =========================
+   OPEN SUBJECT
+========================= */
+
+function openSubject(subject) {
+    localStorage.setItem("bcsPediaSubject", subject.subject_name);
+    localStorage.setItem("bcsPediaSubjectId", String(subject.id));
+    localStorage.setItem("bcsPediaSemester", String(subject.semester));
+    localStorage.setItem("bcsPediaPattern", selectedPattern);
+
+    window.location.href = "subject-details.html";
+}
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout() {
+    [
+        "bcsPediaUser",
+        "bcsPediaLoggedIn",
+        "bcsPediaPattern",
+        "bcsPediaYear",
+        "bcsPediaSubject",
+        "bcsPediaSubjectId",
+        "bcsPediaSemester"
+    ].forEach(key => localStorage.removeItem(key));
+
+    window.location.href = "login.html";
+}
+
+/* =========================
+   START
+========================= */
+
+if (loggedInUser && patternNames[selectedPattern]) {
+    loadSubjects();
+}
+</script>
+
+</body>
+</html>

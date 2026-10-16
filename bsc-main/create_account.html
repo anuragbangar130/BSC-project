@@ -1,0 +1,434 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - BCS Pedia</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Create Account</h1>
+
+        <p>Create your BCS Pedia account</p>
+
+        <form id="registerForm">
+
+            <!-- Full Name -->
+            <input
+                type="text"
+                id="fullname"
+                placeholder="Full Name"
+                required
+            >
+
+            <!-- Email -->
+            <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                required
+            >
+
+            <!-- Username -->
+            <input
+                type="text"
+                id="username"
+                placeholder="Username"
+                required
+            >
+
+            <!-- Password -->
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+            >
+
+            <!-- Confirm Password -->
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                required
+            >
+
+            <!-- Role -->
+            <select id="role" required>
+
+                <option value="">
+                    Select Role
+                </option>
+
+                <option value="student">
+                    Student
+                </option>
+
+                <option value="teacher">
+                    Teacher
+                </option>
+
+            </select>
+
+
+            <!-- Teacher Verification Fields -->
+            <div id="teacherFields" style="display: none;">
+
+                <input
+                    type="text"
+                    id="teacherId"
+                    placeholder="Teacher / Employee ID"
+                >
+
+                <input
+                    type="file"
+                    id="teacherProof"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                >
+
+                <small>
+                    Upload College ID Card or Teacher Proof
+                </small>
+
+            </div>
+
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+        <p id="message"></p>
+
+        <p>
+            Already have an account?
+            <a href="login.html">
+                Login
+            </a>
+        </p>
+
+    </div>
+
+
+    <script>
+
+        const form =
+            document.getElementById("registerForm");
+
+        const message =
+            document.getElementById("message");
+
+        const roleSelect =
+            document.getElementById("role");
+
+        const teacherFields =
+            document.getElementById("teacherFields");
+
+        const teacherId =
+            document.getElementById("teacherId");
+
+        const teacherProof =
+            document.getElementById("teacherProof");
+
+
+        /* =========================
+           SHOW / HIDE TEACHER FIELDS
+           ========================= */
+
+        roleSelect.addEventListener(
+            "change",
+            function() {
+
+                if (roleSelect.value === "teacher") {
+
+                    teacherFields.style.display = "block";
+
+                    teacherId.required = true;
+                    teacherProof.required = true;
+
+                } else {
+
+                    teacherFields.style.display = "none";
+
+                    teacherId.required = false;
+                    teacherProof.required = false;
+
+                    teacherId.value = "";
+                    teacherProof.value = "";
+                }
+
+            }
+        );
+
+
+        /* =========================
+           FORM SUBMIT
+           ========================= */
+
+        form.addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const fullname =
+                    document
+                    .getElementById("fullname")
+                    .value
+                    .trim();
+
+
+                const email =
+                    document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+
+                /* =========================
+                   EMAIL VALIDATION
+                   ========================= */
+
+                const emailPattern =
+                    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+                if (!emailPattern.test(email)) {
+
+                    message.textContent =
+                        "Please enter a valid email address.";
+
+                    return;
+                }
+
+
+                const username =
+                    document
+                    .getElementById("username")
+                    .value
+                    .trim();
+
+
+                const password =
+                    document
+                    .getElementById("password")
+                    .value;
+
+
+                const confirmPassword =
+                    document
+                    .getElementById("confirmPassword")
+                    .value;
+
+
+                const role =
+                    document
+                    .getElementById("role")
+                    .value;
+
+
+                /* =========================
+                   PASSWORD CHECK
+                   ========================= */
+
+                if (
+                    password !==
+                    confirmPassword
+                ) {
+
+                    message.textContent =
+                        "Passwords do not match.";
+
+                    return;
+                }
+
+
+                /* =========================
+                   ROLE CHECK
+                   ========================= */
+
+                if (
+                    role !== "student" &&
+                    role !== "teacher"
+                ) {
+
+                    message.textContent =
+                        "Please select a valid role.";
+
+                    return;
+                }
+
+
+                /* =========================
+                   TEACHER CHECK
+                   ========================= */
+
+                if (role === "teacher") {
+
+                    if (
+                        teacherId.value.trim() === ""
+                    ) {
+
+                        message.textContent =
+                            "Teacher / Employee ID is required.";
+
+                        return;
+                    }
+
+
+                    if (
+                        teacherProof.files.length === 0
+                    ) {
+
+                        message.textContent =
+                            "Teacher proof is required.";
+
+                        return;
+                    }
+
+                }
+
+
+                /* =========================
+                   FORM DATA
+                   ========================= */
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "fullname",
+                    fullname
+                );
+
+
+                formData.append(
+                    "email",
+                    email
+                );
+
+
+                formData.append(
+                    "username",
+                    username
+                );
+
+
+                formData.append(
+                    "password",
+                    password
+                );
+
+
+                formData.append(
+                    "role",
+                    role
+                );
+
+
+                if (role === "teacher") {
+
+                    formData.append(
+                        "teacher_id",
+                        teacherId.value.trim()
+                    );
+
+                    formData.append(
+                        "teacher_proof",
+                        teacherProof.files[0]
+                    );
+
+                }
+
+
+                /* =========================
+                   SEND DATA TO PHP
+                   ========================= */
+
+                fetch(
+                    "backend/register.php",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                )
+
+                .then(
+                    response =>
+                        response.text()
+                )
+
+                .then(
+                    data => {
+
+                        console.log(
+                            "SERVER RESPONSE:",
+                            data
+                        );
+
+
+                        const result =
+                            JSON.parse(data);
+
+
+                        message.textContent =
+                            result.message;
+
+
+                        if (result.success) {
+
+                            form.reset();
+
+                            teacherFields.style.display =
+                                "none";
+
+                            setTimeout(function() {
+
+                                window.location.href =
+                                    "login.html";
+
+                            }, 1000);
+
+                        }
+
+                    }
+                )
+
+                .catch(
+                    error => {
+
+                        console.error(
+                            "Registration Error:",
+                            error
+                        );
+
+
+                        message.textContent =
+                            "Something went wrong.";
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

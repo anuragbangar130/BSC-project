@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - BCS Pedia</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f5f6fa;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-buttons button {
+            padding: 8px 15px;
+            margin-left: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        #searchInput {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #searchBtn {
+            padding: 12px 25px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #searchBtn:hover {
+            background: #444;
+        }
+
+        .result-card {
+            background: white;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .result-card h3 {
+            margin-top: 0;
+        }
+
+        .type {
+            display: inline-block;
+            background: #eee;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .message {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .open-btn {
+            padding: 8px 18px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .open-btn:hover {
+            background: #444;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">BCS Pedia</div>
+
+    <div class="header-buttons">
+        <button onclick="goHome()">Home</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div class="container">
+
+    <h1>Search BCS Pedia</h1>
+
+    <div class="search-box">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search subjects or information..."
+        >
+
+        <button id="searchBtn" onclick="performSearch()">
+            Search
+        </button>
+    </div>
+
+    <div id="searchResults"></div>
+
+</div>
+
+<script>
+    // Check login
+    const user = localStorage.getItem("bcsPediaUser");
+
+    if (!user) {
+        window.location.href = "login.html";
+    }
+
+    function performSearch() {
+        const query = document.getElementById("searchInput").value.trim();
+        const resultsDiv = document.getElementById("searchResults");
+
+        if (query === "") {
+            resultsDiv.innerHTML =
+                '<div class="message">Please enter something to search.</div>';
+            return;
+        }
+
+        resultsDiv.innerHTML =
+            '<div class="message">Searching...</div>';
+
+        fetch("backend/search.php?q=" + encodeURIComponent(query))
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    resultsDiv.innerHTML =
+                        '<div class="message">' +
+                        escapeHTML(data.message || "Search failed.") +
+                        '</div>';
+                    return;
+                }
+
+                if (!data.results || data.results.length === 0) {
+                    resultsDiv.innerHTML =
+                        '<div class="message">No results found.</div>';
+                    return;
+                }
+
+                resultsDiv.innerHTML = "";
+
+                data.results.forEach(item => {
+                    const card = document.createElement("div");
+                    card.className = "result-card";
+
+                    const typeDiv = document.createElement("div");
+                    typeDiv.className = "type";
+                    typeDiv.textContent = item.type || "";
+
+                    const title = document.createElement("h3");
+                    title.textContent = item.title || "Untitled";
+
+                    const description = document.createElement("p");
+                    description.textContent = item.description || "";
+
+                    const openBtn = document.createElement("button");
+                    openBtn.className = "open-btn";
+                    openBtn.textContent = "Open →";
+
+                    openBtn.addEventListener("click", function() {
+                        const type = String(item.type || "").toLowerCase();
+
+                        // SUBJECT
+                        if (type === "subject") {
+                            localStorage.setItem(
+                                "bcsPediaSubject",
+                                item.title || ""
+                            );
+
+                            if (item.id) {
+                                localStorage.setItem(
+                                    "bcsPediaSubjectId",
+                                    String(item.id)
+                                );
+                            }
+
+                            window.location.href = "subject-details.html";
+                            return;
+                        }
+
+                        // CONTENT
+                        if (type === "content") {
+                            alert(
+                                "Please open the subject to view its information."
+                            );
+                            return;
+                        }
+
+                        alert("This search result cannot be opened yet.");
+                    });
+
+                    card.appendChild(typeDiv);
+                    card.appendChild(title);
+                    card.appendChild(description);
+                    card.appendChild(openBtn);
+
+                    resultsDiv.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+
+                resultsDiv.innerHTML =
+                    '<div class="message">Unable to connect to server.</div>';
+            });
+    }
+
+    // Search when Enter is pressed
+    document.getElementById("searchInput").addEventListener(
+        "keydown",
+        function(event) {
+            if (event.key === "Enter") {
+                performSearch();
+            }
+        }
+    );
+
+    function escapeHTML(value) {
+        const div = document.createElement("div");
+        div.textContent = value;
+        return div.innerHTML;
+    }
+
+    function goHome() {
+        window.location.href = "index.html";
+    }
+
+    function logout() {
+        localStorage.removeItem("bcsPediaUser");
+        localStorage.removeItem("bcsPediaPattern");
+        localStorage.removeItem("bcsPediaYear");
+        localStorage.removeItem("bcsPediaSubject");
+        localStorage.removeItem("bcsPediaSubjectId");
+        localStorage.removeItem("bcsPediaSemester");
+
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>

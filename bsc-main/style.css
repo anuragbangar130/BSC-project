@@ -1,0 +1,2395 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #222;
+}
+
+
+/* ================= NAVBAR ================= */
+
+header {
+    background: #172554;
+    width: 100%;
+}
+
+
+.navbar {
+    max-width: 1200px;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 30px;
+}
+
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    color: white;
+}
+
+
+.logo span {
+    color: #60a5fa;
+}
+
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+
+.nav-links a:hover {
+    color: #60a5fa;
+}
+
+
+.login-btn {
+    border: none;
+    background: #2563eb;
+    color: white;
+
+    padding: 10px 20px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+}
+
+
+.login-btn:hover {
+    background: #1d4ed8;
+}
+
+
+/* ================= HERO ================= */
+
+.hero {
+    min-height: 450px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    background: linear-gradient(
+        135deg,
+        #172554,
+        #2563eb
+    );
+
+    color: white;
+}
+
+
+.hero-content {
+    max-width: 800px;
+    padding: 30px;
+}
+
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+
+.hero h1 span {
+    color: #93c5fd;
+}
+
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 35px;
+}
+
+
+/* Search */
+
+.search-box {
+    display: flex;
+
+    max-width: 650px;
+
+    margin: auto;
+
+    background: white;
+
+    padding: 6px;
+
+    border-radius: 8px;
+}
+
+
+.search-box input {
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    padding: 15px;
+
+    font-size: 16px;
+}
+
+
+.search-box button {
+    border: none;
+
+    background: #2563eb;
+
+    color: white;
+
+    padding: 0 25px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+
+/* ================= SECTIONS ================= */
+
+.subjects,
+.features,
+.about {
+    padding: 70px 30px;
+}
+
+
+.section-title {
+    text-align: center;
+
+    margin-bottom: 45px;
+}
+
+
+.section-title h2 {
+    font-size: 32px;
+
+    color: #172554;
+
+    margin-bottom: 10px;
+}
+
+
+.section-title p {
+    color: #666;
+}
+
+
+/* ================= SUBJECT CARDS ================= */
+
+.subject-container {
+
+    max-width: 1200px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+
+.subject-card {
+
+    background: white;
+
+    padding: 30px;
+
+    text-align: center;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.08);
+
+    transition: 0.3s;
+}
+
+
+.subject-card:hover {
+
+    transform: translateY(-7px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(0, 0, 0, 0.15);
+}
+
+
+.card-icon {
+
+    font-size: 40px;
+
+    margin-bottom: 15px;
+}
+
+
+.subject-card h3 {
+
+    color: #172554;
+
+    margin-bottom: 12px;
+}
+
+
+.subject-card p {
+
+    color: #666;
+
+    line-height: 1.6;
+
+    margin-bottom: 20px;
+}
+
+
+.subject-card button {
+
+    background: #2563eb;
+
+    color: white;
+
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+
+.subject-card button:hover {
+
+    background: #1d4ed8;
+}
+
+
+/* ================= FEATURES ================= */
+
+.features {
+
+    background: #eef2ff;
+}
+
+
+.feature-container {
+
+    max-width: 1100px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+}
+
+
+.feature-card {
+
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    text-align: center;
+}
+
+
+.feature-card h3 {
+
+    color: #172554;
+
+    margin-bottom: 12px;
+
+    font-size: 18px;
+}
+
+
+.feature-card p {
+
+    color: #666;
+
+    line-height: 1.5;
+}
+
+
+/* ================= ABOUT ================= */
+
+.about {
+
+    background: white;
+}
+
+
+.about-content {
+
+    max-width: 850px;
+
+    margin: auto;
+
+    text-align: center;
+}
+
+
+.about h2 {
+
+    font-size: 32px;
+
+    color: #172554;
+
+    margin-bottom: 25px;
+}
+
+
+.about p {
+
+    color: #555;
+
+    line-height: 1.8;
+
+    margin-bottom: 15px;
+
+    font-size: 17px;
+}
+
+
+/* ================= FOOTER ================= */
+
+footer {
+
+    background: #172554;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 35px 20px;
+}
+
+
+footer h3 {
+
+    font-size: 25px;
+
+    margin-bottom: 10px;
+}
+
+
+footer p {
+
+    margin: 7px;
+
+    color: #cbd5e1;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+    .subject-container {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .feature-container {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .nav-links {
+
+        gap: 15px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .navbar {
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .nav-links {
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+    }
+
+
+    .hero h1 {
+
+        font-size: 35px;
+    }
+
+
+    .hero p {
+
+        font-size: 17px;
+    }
+
+
+    .search-box {
+
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+
+    .search-box button {
+
+        padding: 12px;
+    }
+
+
+    .subject-container {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .feature-container {
+
+        grid-template-columns: 1fr;
+    }
+
+}/* ================= LOGIN PAGE ================= */
+
+.login-section {
+    min-height: 75vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 50px 20px;
+
+    background: #f5f7fb;
+}
+
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.10);
+}
+
+
+.login-container h1 {
+    text-align: center;
+
+    color: #172554;
+
+    margin-bottom: 8px;
+}
+
+
+.login-subtitle {
+    text-align: center;
+
+    color: #666;
+
+    margin-bottom: 30px;
+}
+
+
+/* Form */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #333;
+
+    font-weight: 600;
+}
+
+
+.form-group input {
+    width: 100%;
+
+    padding: 13px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    font-size: 15px;
+}
+
+
+.form-group input:focus {
+    border-color: #2563eb;
+}
+
+
+/* Remember Row */
+
+.remember-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-size: 14px;
+
+    margin-bottom: 25px;
+}
+
+
+.remember-row a {
+    color: #2563eb;
+
+    text-decoration: none;
+}
+
+
+.remember-row a:hover {
+    text-decoration: underline;
+}
+
+
+/* Login Button */
+
+.login-submit {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+
+.login-submit:hover {
+    background: #1d4ed8;
+}
+
+
+/* Divider */
+
+.login-divider {
+    text-align: center;
+
+    margin: 25px 0;
+
+    color: #999;
+
+    font-size: 14px;
+}
+
+
+/* Register */
+
+.register-text {
+    text-align: center;
+
+    color: #555;
+}
+
+
+.register-text a {
+    color: #2563eb;
+
+    text-decoration: none;
+
+    font-weight: 600;
+}
+
+
+.register-text a:hover {
+    text-decoration: underline;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .login-container {
+        padding: 30px 20px;
+    }
+
+    .remember-row {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+}
+/* ============================= */
+/* CREATE ACCOUNT / LOGIN PAGE   */
+/* ============================= */
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f4f6f8;
+    padding: 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.logo {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+.logo span {
+    color: #3366cc;
+}
+
+.auth-card h2 {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 26px;
+    color: #222;
+}
+
+.welcome-text {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 17px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.input-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 13px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 14px;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: #3366cc;
+    box-shadow: 0 0 0 2px rgba(51, 102, 204, 0.1);
+}
+
+.auth-button {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 7px;
+    background: #3366cc;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.auth-button:hover {
+    background: #2854a8;
+}
+
+#message {
+    text-align: center;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+.login-option {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 14px;
+    color: #555;
+}
+
+.login-option a {
+    color: #3366cc;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+.login-option a:hover {
+    text-decoration: underline;
+}
+
+
+/* ============================= */
+/* PATTERN SELECTION PAGE        */
+/* ============================= */
+
+.pattern-page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #f4f6f8;
+
+    padding: 30px;
+}
+
+
+.pattern-box {
+    width: 100%;
+    max-width: 850px;
+
+    background: white;
+
+    padding: 45px;
+
+    border-radius: 14px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+
+    text-align: center;
+}
+
+
+.pattern-logo {
+    font-size: 32px;
+
+    font-weight: bold;
+
+    color: #222;
+
+    margin-bottom: 15px;
+}
+
+
+.pattern-logo span {
+    color: #3366cc;
+}
+
+
+.pattern-box h1 {
+    font-size: 30px;
+
+    color: #222;
+
+    margin-bottom: 8px;
+}
+
+
+.pattern-subtitle {
+    color: #666;
+
+    margin-bottom: 35px;
+
+    font-size: 15px;
+}
+
+
+
+/* Pattern Cards */
+
+.pattern-options {
+
+    display: flex;
+
+    gap: 25px;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+}
+
+
+.pattern-card {
+
+    width: 300px;
+
+    padding: 30px 25px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 12px;
+
+    background: #fff;
+
+    transition: 0.3s;
+
+    box-sizing: border-box;
+}
+
+
+.pattern-card:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.12);
+
+}
+
+
+
+/* A / N Circle */
+
+.pattern-icon {
+
+    width: 60px;
+
+    height: 60px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #3366cc;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 25px;
+
+    font-weight: bold;
+}
+
+
+.pattern-card h2 {
+
+    font-size: 21px;
+
+    color: #222;
+
+    margin-bottom: 12px;
+}
+
+
+.pattern-card p {
+
+    color: #666;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    min-height: 70px;
+
+    margin-bottom: 20px;
+}
+
+
+
+/* Select Button */
+
+.pattern-card button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #3366cc;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.pattern-card button:hover {
+
+    background: #2854a8;
+}
+
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .pattern-box {
+
+        padding: 30px 20px;
+
+    }
+
+
+    .pattern-box h1 {
+
+        font-size: 25px;
+
+    }
+
+
+    .pattern-card {
+
+        width: 100%;
+
+    }
+
+}
+
+
+/* ============================= */
+/* BCS PEDIA HOME PAGE           */
+/* ============================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
+
+
+/* Header */
+
+.main-header {
+    min-height: 65px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 40px;
+
+    gap: 40px;
+}
+
+
+.site-logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.site-logo span {
+    color: #3366cc;
+}
+
+
+.main-header nav {
+    display: flex;
+    gap: 25px;
+    flex: 1;
+}
+
+
+.main-header nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+}
+
+
+.main-header nav a:hover {
+    color: #3366cc;
+}
+
+
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.user-area span {
+    color: #3366cc;
+    font-weight: bold;
+}
+
+
+.user-area button {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+
+    background: #3366cc;
+    color: white;
+
+    cursor: pointer;
+}
+
+
+/* Main */
+
+.home-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 45px 25px;
+}
+
+
+/* Welcome */
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+
+.welcome-section h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+
+.welcome-section p {
+    color: #666;
+    font-size: 17px;
+}
+
+
+/* Pattern */
+
+.pattern-info {
+    margin-bottom: 45px;
+}
+
+
+.pattern-info h2,
+.year-section h2 {
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+
+.selected-pattern-card {
+    background: white;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    padding: 25px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+
+.selected-pattern-card h3 {
+    color: #3366cc;
+    font-size: 22px;
+    margin-top: 0;
+}
+
+
+.selected-pattern-card p {
+    color: #666;
+}
+
+
+/* Years */
+
+.year-container {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+
+.year-card {
+    flex: 1;
+    min-width: 250px;
+
+    background: white;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    transition: 0.3s;
+}
+
+
+.year-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.year-card h3 {
+    font-size: 21px;
+}
+
+
+.year-card p {
+    color: #666;
+}
+
+
+.year-card button {
+    padding: 10px 25px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #3366cc;
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.year-card button:hover {
+    background: #2854a8;
+}
+
+
+/* Footer */
+
+footer {
+    text-align: center;
+
+    padding: 20px;
+
+    margin-top: 30px;
+
+    border-top: 1px solid #ddd;
+
+    color: #666;
+
+    background: white;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+    .main-header {
+        padding: 15px 20px;
+
+        flex-wrap: wrap;
+
+        gap: 15px;
+    }
+
+
+    .main-header nav {
+        order: 3;
+
+        width: 100%;
+
+        justify-content: center;
+    }
+
+
+    .user-area {
+        margin-left: auto;
+    }
+
+
+    .welcome-section h1 {
+        font-size: 28px;
+    }
+
+}
+
+
+/* =========================================
+   BCS PEDIA - SUBJECT PAGE
+========================================= */
+
+.subject-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+
+/* =========================================
+   PAGE TITLE
+========================================= */
+
+.subject-container h1 {
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.subject-container p {
+    font-size: 18px;
+    margin: 6px 0;
+}
+
+
+/* =========================================
+   SEMESTER SECTION
+========================================= */
+
+.semester-section {
+    margin-top: 35px;
+}
+
+.semester-section h2 {
+    margin-bottom: 20px;
+}
+
+
+/* =========================================
+   SEMESTER BUTTONS
+========================================= */
+
+.semester-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 35px;
+}
+
+.semester-buttons button {
+    padding: 13px 28px;
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    transition: 0.2s;
+}
+
+.semester-buttons button:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   SUBJECT SECTION
+========================================= */
+
+#subjectSection {
+    margin-top: 30px;
+}
+
+#semesterTitle {
+    margin-bottom: 25px;
+}
+
+
+/* =========================================
+   SUBJECT GRID
+========================================= */
+
+#subjectsContainer {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+
+    gap: 22px;
+
+    margin-top: 20px;
+}
+
+
+/* =========================================
+   SUBJECT CARD
+========================================= */
+
+.subject-card {
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.12);
+
+    transition: 0.2s;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.subject-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 7px 20px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================
+   SUBJECT NAME
+========================================= */
+
+.subject-card h3 {
+    font-size: 18px;
+
+    min-height: 65px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1.4;
+
+    margin-bottom: 18px;
+}
+
+
+/* =========================================
+   OPEN SUBJECT BUTTON
+========================================= */
+
+.subject-card button {
+    padding: 10px 20px;
+
+    border: none;
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition: 0.2s;
+}
+
+.subject-card button:hover {
+    transform: scale(1.03);
+}
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.back-btn {
+    margin-top: 35px;
+    margin-bottom: 30px;
+
+    padding: 12px 28px;
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .subject-container {
+        width: 92%;
+        margin-top: 25px;
+    }
+
+    .subject-container h1 {
+        font-size: 30px;
+    }
+
+    .semester-buttons {
+        flex-direction: column;
+        align-items: cent
+    }
+}
+
+
+        
+
+/* =====================================================
+   BCS PEDIA - COMPLETE STYLE
+   ===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f7fb;
+    color: #172033;
+    min-height: 100vh;
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.top-header {
+    width: 100%;
+    min-height: 78px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e9f2;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 7%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    width: 46px;
+    height: 46px;
+
+    background: #2563eb;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 17px;
+    font-weight: 800;
+
+    box-shadow: 0 7px 18px rgba(37, 99, 235, 0.20);
+}
+
+.logo-box h2 {
+    font-size: 20px;
+    color: #172033;
+    line-height: 1.2;
+}
+
+.logo-box p {
+    font-size: 11px;
+    color: #7a8498;
+    margin-top: 2px;
+}
+
+.home-btn {
+    border: 1px solid #dce2ed;
+    background: white;
+    color: #334155;
+
+    padding: 10px 18px;
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.home-btn:hover {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+
+/* =====================================================
+   MAIN PAGE
+   ===================================================== */
+
+.subject-page {
+    width: 86%;
+    max-width: 1250px;
+    margin: auto;
+    padding: 55px 0 70px;
+}
+
+
+/* =====================================================
+   PAGE HEADING
+   ===================================================== */
+
+.page-heading {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.page-heading span {
+    display: inline-block;
+
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 1.8px;
+
+    margin-bottom: 9px;
+}
+
+.page-heading h1 {
+    font-size: 36px;
+    color: #172033;
+    margin-bottom: 9px;
+}
+
+.page-heading p {
+    color: #7a8498;
+    font-size: 15px;
+}
+
+
+/* =====================================================
+   INFORMATION BOX
+   ===================================================== */
+
+.info-box {
+    background: white;
+
+    border: 1px solid #e5e9f2;
+    border-radius: 15px;
+
+    padding: 22px 28px;
+
+    display: flex;
+    justify-content: center;
+    gap: 90px;
+
+    margin-bottom: 45px;
+
+    box-shadow: 0 8px 25px rgba(23, 32, 51, 0.04);
+}
+
+.info-box div {
+    text-align: center;
+    min-width: 210px;
+}
+
+.info-box small {
+    display: block;
+
+    color: #8a94a6;
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    margin-bottom: 6px;
+}
+
+.info-box strong {
+    color: #26344d;
+    font-size: 16px;
+}
+
+
+/* =====================================================
+   SEMESTER SECTION
+   ===================================================== */
+
+.semester-section {
+    margin-bottom: 45px;
+}
+
+.semester-header {
+    margin-bottom: 18px;
+}
+
+.semester-header h2 {
+    font-size: 22px;
+    color: #172033;
+    margin-bottom: 5px;
+}
+
+.semester-header p {
+    color: #7a8498;
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   SEMESTER BUTTONS
+   ===================================================== */
+
+.semester-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.semester-btn {
+    background: white;
+
+    border: 1px solid #dfe5ef;
+    border-radius: 13px;
+
+    min-height: 72px;
+    padding: 12px 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    color: #455269;
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: 0.25s;
+
+    text-align: left;
+}
+
+.semester-btn span {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 10px;
+
+    background: #eef4ff;
+    color: #2563eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.semester-btn:hover {
+    border-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+.semester-btn.active {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.18);
+}
+
+.semester-btn.active span {
+    background: white;
+    color: #2563eb;
+}
+
+
+/* =====================================================
+   SUBJECT SECTION
+   ===================================================== */
+
+.subjects-section {
+    margin-top: 10px;
+}
+
+.section-title {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+}
+
+.section-title > div:first-child span {
+    color: #2563eb;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.4px;
+}
+
+.section-title h2 {
+    font-size: 25px;
+    color: #172033;
+    margin-top: 5px;
+}
+
+.subject-count {
+    background: #eaf1ff;
+    color: #2563eb;
+
+    padding: 7px 13px;
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   SUBJECT GRID
+   ===================================================== */
+
+.subject-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+
+/* =====================================================
+   SUBJECT CARD
+   ===================================================== */
+
+.subject-card {
+    position: relative;
+
+    background: white;
+
+    border: 1px solid #e5e9f2;
+    border-radius: 15px;
+
+    padding: 23px;
+
+    min-height: 235px;
+
+    display: flex;
+    flex-direction: column;
+
+    transition: 0.28s;
+
+    overflow: hidden;
+}
+
+.subject-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background: #2563eb;
+
+    transform: scaleX(0);
+    transform-origin: left;
+
+    transition: 0.28s;
+}
+
+.subject-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #cbd8f5;
+
+    box-shadow: 0 15px 35px rgba(23, 32, 51, 0.08);
+}
+
+.subject-card:hover::before {
+    transform: scaleX(1);
+}
+
+
+/* =====================================================
+   SUBJECT NUMBER
+   ===================================================== */
+
+.subject-number {
+    position: absolute;
+
+    right: 20px;
+    top: 17px;
+
+    color: #c9d1df;
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   BOOK ICON
+   ===================================================== */
+
+.book-icon {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 11px;
+
+    background: #eef4ff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+
+    margin-bottom: 18px;
+}
+
+
+/* =====================================================
+   SUBJECT CONTENT
+   ===================================================== */
+
+.subject-content {
+    flex: 1;
+}
+
+.subject-label {
+    color: #8a94a6;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.subject-content h3 {
+    color: #202c42;
+
+    font-size: 17px;
+    line-height: 1.45;
+
+    margin-top: 6px;
+    margin-right: 25px;
+}
+
+.subject-content p {
+    color: #929bad;
+
+    font-size: 12px;
+
+    margin-top: 10px;
+}
+
+
+/* =====================================================
+   EXPLORE BUTTON
+   ===================================================== */
+
+.explore-btn {
+    width: 100%;
+
+    background: #f7f9fc;
+
+    border: 1px solid #e2e7ef;
+    border-radius: 9px;
+
+    padding: 10px;
+
+    color: #2563eb;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    margin-top: 18px;
+
+    transition: 0.25s;
+}
+
+.explore-btn:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: white;
+}
+
+
+/* =====================================================
+   BACK BUTTON
+   ===================================================== */
+
+.back-btn {
+    display: block;
+
+    margin: 45px auto 0;
+
+    background: white;
+
+    border: 1px solid #dce2ed;
+    border-radius: 9px;
+
+    padding: 11px 22px;
+
+    color: #4b5870;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.back-btn:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+footer {
+    border-top: 1px solid #e5e9f2;
+
+    background: white;
+
+    text-align: center;
+
+    padding: 23px 15px;
+
+    color: #8a94a6;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   RESPONSIVE - TABLET
+   ===================================================== */
+
+@media (max-width: 950px) {
+
+    .subject-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .subject-page {
+        width: 90%;
+    }
+
+    .info-box {
+        gap: 35px;
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVE - MOBILE
+   ===================================================== */
+
+@media (max-width: 650px) {
+
+    .top-header {
+        padding: 12px 5%;
+    }
+
+    .logo-box h2 {
+        font-size: 17px;
+    }
+
+    .logo-box p {
+        display: none;
+    }
+
+    .home-btn {
+        padding: 8px 13px;
+        font-size: 12px;
+    }
+
+    .subject-page {
+        width: 91%;
+        padding-top: 38px;
+    }
+
+    .page-heading h1 {
+        font-size: 28px;
+    }
+
+    .page-heading p {
+        font-size: 13px;
+    }
+
+    .info-box {
+        flex-direction: column;
+        gap: 17px;
+        padding: 20px;
+    }
+
+    .info-box div {
+        min-width: auto;
+    }
+
+    .semester-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .section-title h2 {
+        font-size: 21px;
+    }
+
+    .subject-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .subject-card {
+        min-height: 220px;
+    }
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 400px) {
+
+    .page-heading h1 {
+        font-size: 25px;
+    }
+
+    .semester-btn {
+        min-height: 65px;
+    }
+
+    .subject-card {
+        padding: 19px;
+    }
+
+    .subject-content h3 {
+        font-size: 16px;
+    }
+}
+
+/* =========================
+   CONTENT TYPE SELECT
+   ========================= */
+
+.selected-pattern-card select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    background: white;
+}
+
+.selected-pattern-card select:focus {
+    outline: none;
+    border-color: #555;
+}
+
+.file-note {
+    font-size: 13px;
+    color: #666;
+    margin-top: -8px;
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   MANAGE INFORMATION PAGE
+   ========================= */
+
+.information-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    background: #fff;
+}
+
+.information-card h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.information-card p {
+    margin: 8px 0;
+}
+
+.manage-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.manage-buttons button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+    margin-top: 15px;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: #555;
+}
+
+#message {
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* =========================
+   CREATE ACCOUNT PAGE
+   ========================= */
+
+#registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin: 25px auto;
+}
+
+#registerForm input,
+#registerForm select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+#registerForm input:focus,
+#registerForm select:focus {
+    outline: none;
+    border-color: #3366cc;
+}
+
+#registerForm button {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #3366cc;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#registerForm button:hover {
+    background: #2855aa;
+}
+
+#message {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    text-align: center;
+}
+
+.container h1 {
+    margin-bottom: 10px;
+}
+
+.container p {
+    color: #555;
+}
+
+.container a {
+    color: #3366cc;
+    text-decoration: none;
+}
+
+.container a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   DASHBOARD CARDS
+   ========================= */
+
+.pattern-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.selected-pattern-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.selected-pattern-card h2 {
+    color: #172554;
+    margin-bottom: 12px;
+}
+
+.selected-pattern-card p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.selected-pattern-card button {
+    width: 100%;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #3366cc;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.selected-pattern-card button:hover {
+    background: #2854a8;
+}
+
+
+/* Mobile */
+
+@media (max-width: 800px) {
+
+    .pattern-info {
+        grid-template-columns: 1fr;
+    }
+
+}

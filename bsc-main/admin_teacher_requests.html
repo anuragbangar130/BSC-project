@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Teacher Verification - BCS Pedia</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .title-box {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .title-box h2 {
+            margin-bottom: 8px;
+        }
+
+        .title-box p {
+            color: #666;
+        }
+
+        .message {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .table-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f3f5;
+        }
+
+        .proof-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .approve-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .reject-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>Teacher Verification</h1>
+
+    <button
+        class="back-btn"
+        onclick="goBack()">
+        ← Admin Dashboard
+    </button>
+
+</header>
+
+
+<div class="container">
+
+    <div class="title-box">
+
+        <h2>Pending Teacher Requests</h2>
+
+        <p>
+            Review teacher registration requests
+            and approve or reject them.
+        </p>
+
+    </div>
+
+
+    <div
+        id="message"
+        class="message">
+    </div>
+
+
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Teacher ID</th>
+                    <th>Proof</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="requestsTable">
+
+                <tr>
+                    <td colspan="5" class="empty">
+                        Loading requests...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   ADMIN LOGIN CHECK
+   ========================= */
+
+const userData =
+    localStorage.getItem("bcsPediaUser");
+
+if (!userData) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+const user =
+    JSON.parse(userData);
+
+if (user.role !== "admin") {
+
+    alert("Access denied.");
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================
+   LOAD REQUESTS
+   ========================= */
+
+function loadRequests() {
+
+    fetch("backend/teacher_requests.php")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            const table =
+                document.getElementById(
+                    "requestsTable"
+                );
+
+            table.innerHTML = "";
+
+            if (!data.success) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="5"
+                            class="empty">
+                            ${data.message}
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            if (data.requests.length === 0) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="5"
+                            class="empty">
+                            No pending teacher requests.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            data.requests.forEach(request => {
+
+                const row =
+                    document.createElement("tr");
+
+
+                row.innerHTML = `
+
+                    <td>
+                        ${escapeHtml(request.name)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(request.email)}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(request.teacher_id)}
+                    </td>
+
+                    <td>
+
+                        <a
+                            class="proof-btn"
+                            href="${request.teacher_proof}"
+                            target="_blank">
+
+                            View Proof
+
+                        </a>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="approve-btn"
+                            onclick="updateRequest(
+                                ${request.id},
+                                'approve'
+                            )">
+
+                            Approve
+
+                        </button>
+
+                        <button
+                            class="reject-btn"
+                            onclick="updateRequest(
+                                ${request.id},
+                                'reject'
+                            )">
+
+                            Reject
+
+                        </button>
+
+                    </td>
+
+                `;
+
+                table.appendChild(row);
+
+            });
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            document.getElementById(
+                "requestsTable"
+            ).innerHTML = `
+
+                <tr>
+                    <td colspan="5"
+                        class="empty">
+
+                        Unable to load requests.
+
+                    </td>
+                </tr>
+
+            `;
+
+        });
+
+}
+
+
+/* =========================
+   APPROVE / REJECT
+   ========================= */
+
+function updateRequest(id, action) {
+
+    const confirmMessage =
+        action === "approve"
+            ? "Approve this teacher request?"
+            : "Reject this teacher request?";
+
+
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+
+
+    const formData =
+        new FormData();
+
+    formData.append("id", id);
+    formData.append("action", action);
+
+
+    fetch("backend/teacher_verification.php", {
+
+        method: "POST",
+
+        body: formData
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        message.style.display = "block";
+
+        message.textContent =
+            data.message;
+
+
+        if (data.success) {
+
+            message.style.color = "#155724";
+            message.style.background = "#d4edda";
+
+            loadRequests();
+
+        } else {
+
+            message.style.color = "#721c24";
+            message.style.background = "#f8d7da";
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Something went wrong."
+        );
+
+    });
+
+}
+
+
+/* =========================
+   HTML SAFETY
+   ========================= */
+
+function escapeHtml(value) {
+
+    if (value === null ||
+        value === undefined) {
+
+        return "";
+
+    }
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   BACK
+   ========================= */
+
+function goBack() {
+
+    window.location.href =
+        "admin_dashboard.html";
+
+}
+
+
+/* =========================
+   START
+   ========================= */
+
+loadRequests();
+
+</script>
+
+</body>
+
+</html>

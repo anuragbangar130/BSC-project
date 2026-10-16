@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Select Pattern - BCS Pedia</title>
+
+    <!-- CSS File -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <div class="pattern-page">
+
+
+        <div class="pattern-box">
+
+
+            <!-- Logo -->
+
+            <div class="pattern-logo">
+                BCS <span>Pedia</span>
+            </div>
+
+
+            <!-- Heading -->
+
+            <h1>Select Your Pattern</h1>
+
+            <p class="pattern-subtitle">
+                Choose your B.Sc. Computer Science pattern
+            </p>
+
+
+
+            <!-- Pattern Options -->
+
+            <div class="pattern-options">
+
+
+                <!-- Autonomous -->
+
+                <div class="pattern-card">
+
+                    <div class="pattern-icon">
+                        A
+                    </div>
+
+                    <h2>
+                        Autonomous Pattern
+                    </h2>
+
+                    <p>
+                        Access subjects, syllabus and study
+                        material based on the Autonomous Pattern.
+                    </p>
+
+                    <button
+                        onclick="selectPattern('autonomous')"
+                    >
+                        Select Autonomous
+                    </button>
+
+                </div>
+
+
+
+                <!-- NEP -->
+
+                <div class="pattern-card">
+
+                    <div class="pattern-icon">
+                        N
+                    </div>
+
+                    <h2>
+                        NEP Pattern
+                    </h2>
+
+                    <p>
+                        Access subjects, syllabus and study
+                        material based on the NEP Pattern.
+                    </p>
+
+                    <button
+                        onclick="selectPattern('nep')"
+                    >
+                        Select NEP
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- JavaScript -->
+
+    <script>
+
+
+        function selectPattern(pattern) {
+
+
+            // Save selected pattern
+
+            localStorage.setItem(
+                "bcsPediaPattern",
+                pattern
+            );
+
+
+
+            // Go to main website
+
+            window.location.href =
+                "index.html";
+
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
+
+
+

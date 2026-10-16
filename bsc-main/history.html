@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Activity History - BCS Pedia</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="main-header">
+
+    <div class="site-logo">
+        BCS <span>Pedia</span>
+    </div>
+
+
+    <div class="user-area">
+
+        <span id="userInfo">
+            Loading...
+        </span>
+
+        <button onclick="goDashboard()">
+            Dashboard
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<main class="home-container">
+
+
+    <section class="welcome-section">
+
+        <h1>
+            Activity History
+        </h1>
+
+        <p>
+            View your information activity.
+        </p>
+
+    </section>
+
+
+
+    <section class="pattern-info">
+
+        <div class="selected-pattern-card">
+
+            <h2>
+                My Activity
+            </h2>
+
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search history..."
+            >
+
+
+            <div id="historyList">
+
+                <p>
+                    Loading history...
+                </p>
+
+            </div>
+
+
+            <p id="message"></p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<footer>
+
+    <p>
+        © 2026 BCS Pedia | B.Sc. Computer Science
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================
+   CHECK LOGIN
+   ========================= */
+
+const userData =
+    localStorage.getItem("bcsPediaUser");
+
+
+if (!userData) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+const user =
+    JSON.parse(userData);
+
+
+
+/* =========================
+   CHECK VALID ROLE
+   ========================= */
+
+if (
+    user.role !== "student" &&
+    user.role !== "teacher" &&
+    user.role !== "admin"
+) {
+
+    localStorage.removeItem(
+        "bcsPediaUser"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* =========================
+   SHOW USER
+   ========================= */
+
+document.getElementById(
+    "userInfo"
+).textContent =
+    user.name + " (" + user.role + ")";
+
+
+
+/* =========================
+   LOAD HISTORY
+   ========================= */
+
+async function loadHistory() {
+
+    const historyList =
+        document.getElementById(
+            "historyList"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "backend/get_history.php?user_id="
+                + user.id
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            historyList.innerHTML = "";
+
+            message.textContent =
+                result.message;
+
+            message.style.color =
+                "red";
+
+            return;
+
+        }
+
+
+        historyList.innerHTML = "";
+
+
+
+        /* =========================
+           NO HISTORY
+           ========================= */
+
+        if (
+            result.data.length === 0
+        ) {
+
+            historyList.innerHTML = `
+
+                <div class="information-card">
+
+                    <h3>
+                        No Activity Found
+                    </h3>
+
+                    <p>
+                        You have not added, updated
+                        or deleted any information yet.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+
+        /* =========================
+           DISPLAY HISTORY
+           ========================= */
+
+        result.data.forEach(
+            function(item) {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "information-card";
+
+
+                card.innerHTML = `
+
+                    <h3>
+                        ${item.title || "Untitled Information"}
+                    </h3>
+
+                    <p>
+                        <strong>Action:</strong>
+                        ${item.action}
+                    </p>
+
+                    <p>
+                        <strong>Description:</strong>
+                        ${item.description || "No description"}
+                    </p>
+
+                    <p>
+                        <strong>Date & Time:</strong>
+                        ${item.created_at}
+                    </p>
+
+                `;
+
+
+                historyList.appendChild(
+                    card
+                );
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        historyList.innerHTML = "";
+
+        message.textContent =
+            "Unable to load activity history.";
+
+        message.style.color =
+            "red";
+
+    }
+
+}
+
+
+
+/* =========================
+   SEARCH HISTORY
+   ========================= */
+
+document
+    .getElementById("searchInput")
+    .addEventListener(
+        "input",
+        function() {
+
+            const searchValue =
+                this.value.toLowerCase();
+
+
+            const cards =
+                document.querySelectorAll(
+                    "#historyList .information-card"
+                );
+
+
+            cards.forEach(
+                function(card) {
+
+                    const text =
+                        card.textContent
+                            .toLowerCase();
+
+
+                    if (
+                        text.includes(searchValue)
+                    ) {
+
+                        card.style.display =
+                            "block";
+
+                    } else {
+
+                        card.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+
+/* =========================
+   GO TO DASHBOARD
+   ========================= */
+
+function goDashboard() {
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+
+/* =========================
+   LOAD HISTORY
+   ========================= */
+
+loadHistory();
+
+
+</script>
+
+
+</body>
+
+</html>

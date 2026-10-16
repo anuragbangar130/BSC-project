@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - BCS Pedia</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .top-bar input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        .users-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .user-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .user-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .user-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .user-card p {
+            margin: 8px 0;
+            color: #555;
+            overflow-wrap: anywhere;
+        }
+
+        .role {
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .admin-label {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 10px;
+            background: #eee;
+            color: #555;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .message {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+        }
+
+        @media (max-width: 700px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .header-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>BCS Pedia - User Management</h1>
+
+    <div class="header-buttons">
+        <button type="button" onclick="goHome()">Home</button>
+
+        <button type="button" onclick="goDashboard()">
+            Admin Dashboard
+        </button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="top-bar">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name, email, username or role..."
+            oninput="searchUsers()"
+        >
+    </div>
+
+    <div class="users-container" id="usersContainer">
+        <div class="message">Loading users...</div>
+    </div>
+
+</div>
+
+<script>
+"use strict";
+
+// LOGIN CHECK
+
+const userData = localStorage.getItem("bcsPediaUser");
+
+if (!userData) {
+    window.location.href = "login.html";
+} else {
+    try {
+        const currentUser = JSON.parse(userData);
+
+        if (!currentUser || currentUser.role !== "admin") {
+            alert("Access denied. Admin only.");
+            window.location.href = "login.html";
+        } else {
+            loadUsers();
+        }
+    } catch (error) {
+        localStorage.removeItem("bcsPediaUser");
+        window.location.href = "login.html";
+    }
+}
+
+// USERS DATA
+
+let users = [];
+
+// LOAD USERS
+
+function loadUsers() {
+    const container = document.getElementById("usersContainer");
+
+    container.innerHTML = `
+        <div class="message">Loading users...</div>
+    `;
+
+    fetch("backend/get_all_users.php")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Server error: " + response.status);
+            }
+
+            return response.json();
+        })
+        .then(result => {
+            if (!result.success) {
+                container.innerHTML = `
+                    <div class="message">
+                        ${escapeHTML(
+                            result.message || "Could not load users."
+                        )}
+                    </div>
+                `;
+                return;
+            }
+
+            users = Array.isArray(result.data) ? result.data : [];
+            displayUsers(users);
+        })
+        .catch(error => {
+            console.error("Load users error:", error);
+
+            container.innerHTML = `
+                <div class="message">
+                    Could not load users. Please check the server and try again.
+                </div>
+            `;
+        });
+}
+
+// DISPLAY USERS
+
+function displayUsers(userList) {
+    const container = document.getElementById("usersContainer");
+
+    if (!Array.isArray(userList) || userList.length === 0) {
+        container.innerHTML = `
+            <div class="message">No users found.</div>
+        `;
+        return;
+    }
+
+    container.innerHTML = "";
+
+    userList.forEach(user => {
+        const card = document.createElement("div");
+        card.className = "user-card";
+
+        const name = escapeHTML(user.name || "");
+        const email = escapeHTML(user.email || "");
+        const username = escapeHTML(user.username || "");
+        const role = escapeHTML(user.role || "");
+        const created = escapeHTML(user.created_at || "");
+
+        card.innerHTML = `
+            <h3>${name || "Name not available"}</h3>
+
+            <p>
+                <strong>Email:</strong>
+                ${email || "Not available"}
+            </p>
+
+            <p>
+                <strong>Username:</strong>
+                ${username || "Not available"}
+            </p>
+
+            <p>
+                <strong>Role:</strong>
+                <span class="role">
+                    ${role || "Not available"}
+                </span>
+            </p>
+
+            <p>
+                <strong>Created:</strong>
+                ${created || "Not available"}
+            </p>
+
+            ${
+                role.toLowerCase() === "admin"
+                    ? '<span class="admin-label">Admin Account</span>'
+                    : ''
+            }
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+// SEARCH USERS
+
+function searchUsers() {
+    const search = document
+        .getElementById("searchInput")
+        .value.toLowerCase()
+        .trim();
+
+    const filtered = users.filter(user => {
+        const name = String(user.name || "").toLowerCase();
+        const email = String(user.email || "").toLowerCase();
+        const username = String(user.username || "").toLowerCase();
+        const role = String(user.role || "").toLowerCase();
+
+        return (
+            name.includes(search) ||
+            email.includes(search) ||
+            username.includes(search) ||
+            role.includes(search)
+        );
+    });
+
+    displayUsers(filtered);
+}
+
+// ESCAPE HTML
+
+function escapeHTML(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// HOME BUTTON
+
+function goHome() {
+    window.location.href = "welcome.html";
+}
+
+// ADMIN DASHBOARD BUTTON
+
+function goDashboard() {
+    window.location.href = "admin_dashboard.html";
+}
+</script>
+
+</body>
+</html>

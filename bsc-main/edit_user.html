@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit User - BCS Pedia</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+
+        header {
+            background: #222;
+            color: white;
+
+            padding: 20px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        header h1 {
+            font-size: 25px;
+        }
+
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+
+            border: none;
+
+            padding: 10px 18px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+        }
+
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+
+            margin: 40px auto;
+        }
+
+
+        .form-card {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.08);
+        }
+
+
+        .form-card h2 {
+            margin-bottom: 25px;
+
+            color: #333;
+        }
+
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+        }
+
+
+        .form-group input,
+        .form-group select {
+
+            width: 100%;
+
+            padding: 11px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+
+        .form-group input:focus,
+        .form-group select:focus {
+
+            outline: none;
+
+            border-color: #007bff;
+        }
+
+
+        .buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 25px;
+        }
+
+
+        .update-btn {
+
+            flex: 1;
+
+            background: #007bff;
+
+            color: white;
+
+            border: none;
+
+            padding: 12px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+
+        .cancel-btn {
+
+            flex: 1;
+
+            background: #6c757d;
+
+            color: white;
+
+            border: none;
+
+            padding: 12px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+
+        .update-btn:hover {
+            background: #0056b3;
+        }
+
+
+        .cancel-btn:hover {
+            background: #545b62;
+        }
+
+
+        .message {
+
+            margin-top: 15px;
+
+            text-align: center;
+
+            font-size: 14px;
+        }
+
+
+        .success {
+            color: #198754;
+        }
+
+
+        .error {
+            color: #dc3545;
+        }
+
+
+        @media(max-width: 600px) {
+
+            header {
+
+                flex-direction: column;
+
+                gap: 15px;
+
+                text-align: center;
+            }
+
+
+            .buttons {
+
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        BCS Pedia - Edit User
+    </h1>
+
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+
+        Logout
+
+    </button>
+
+</header>
+
+
+
+<div class="container">
+
+
+    <div class="form-card">
+
+        <h2>
+            Edit User
+        </h2>
+
+
+        <form id="editUserForm">
+
+
+            <div class="form-group">
+
+                <label for="name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    required>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    required>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    required>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="role">
+                    Role
+                </label>
+
+                <select
+                    id="role"
+                    required>
+
+                    <option value="">
+                        Select Role
+                    </option>
+
+                    <option value="student">
+                        Student
+                    </option>
+
+                    <option value="teacher">
+                        Teacher
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="update-btn">
+
+                    Update User
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="goBack()">
+
+                    Cancel
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="message"
+                class="message">
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   CHECK LOGIN
+   ========================================== */
+
+const userData =
+    localStorage.getItem(
+        "bcsPediaUser"
+    );
+
+
+if (!userData) {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+const currentUser =
+    JSON.parse(userData);
+
+
+
+/* ==========================================
+   ADMIN ONLY
+   ========================================== */
+
+if (currentUser.role !== "admin") {
+
+    alert(
+        "Access denied."
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* ==========================================
+   GET USER ID
+   ========================================== */
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const userId =
+    urlParams.get("id");
+
+
+if (!userId) {
+
+    alert(
+        "User ID not found."
+    );
+
+    window.location.href =
+        "admin_users.html";
+
+}
+
+
+
+/* ==========================================
+   LOAD USER
+   ========================================== */
+
+function loadUser() {
+
+    fetch(
+        "backend/get_all_users.php"
+    )
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server error"
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(result => {
+
+        if (!result.success) {
+
+            alert(
+                result.message
+            );
+
+            window.location.href =
+                "admin_users.html";
+
+            return;
+
+        }
+
+
+        const user =
+            result.data.find(
+                item =>
+                    String(item.id) ===
+                    String(userId)
+            );
+
+
+        if (!user) {
+
+            alert(
+                "User not found."
+            );
+
+            window.location.href =
+                "admin_users.html";
+
+            return;
+
+        }
+
+
+        /*
+         * ADMIN ACCOUNT PROTECTION
+         */
+
+        if (user.role === "admin") {
+
+            alert(
+                "Admin account cannot be edited."
+            );
+
+            window.location.href =
+                "admin_users.html";
+
+            return;
+
+        }
+
+
+        document.getElementById(
+            "name"
+        ).value =
+            user.name || "";
+
+
+        document.getElementById(
+            "email"
+        ).value =
+            user.email || "";
+
+
+        document.getElementById(
+            "username"
+        ).value =
+            user.username || "";
+
+
+        document.getElementById(
+            "role"
+        ).value =
+            user.role || "";
+
+    })
+
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert(
+            "Could not load user."
+        );
+
+        window.location.href =
+            "admin_users.html";
+
+    });
+
+}
+
+
+
+/* ==========================================
+   UPDATE USER
+   ========================================== */
+
+document.getElementById(
+    "editUserForm"
+).addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const name =
+            document.getElementById(
+                "name"
+            ).value.trim();
+
+
+        const email =
+            document.getElementById(
+                "email"
+            ).value.trim();
+
+
+        const username =
+            document.getElementById(
+                "username"
+            ).value.trim();
+
+
+        const role =
+            document.getElementById(
+                "role"
+            ).value;
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        message.className =
+            "message";
+
+
+        if (
+            name === "" ||
+            email === "" ||
+            username === "" ||
+            role === ""
+        ) {
+
+            message.textContent =
+                "Please fill all fields.";
+
+            message.classList.add(
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (
+            role !== "student" &&
+            role !== "teacher"
+        ) {
+
+            message.textContent =
+                "Invalid role selected.";
+
+            message.classList.add(
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "id",
+            userId
+        );
+
+
+        formData.append(
+            "name",
+            name
+        );
+
+
+        formData.append(
+            "email",
+            email
+        );
+
+
+        formData.append(
+            "username",
+            username
+        );
+
+
+        formData.append(
+            "role",
+            role
+        );
+
+
+        message.textContent =
+            "Updating user...";
+
+
+        fetch(
+            "backend/update_user.php",
+            {
+                method: "POST",
+                body: formData
+            }
+        )
+
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Server error"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+
+        .then(result => {
+
+            if (result.success) {
+
+                message.textContent =
+                    "User updated successfully.";
+
+                message.classList.add(
+                    "success"
+                );
+
+
+                setTimeout(
+                    function() {
+
+                        window.location.href =
+                            "admin_users.html";
+
+                    },
+                    800
+                );
+
+            } else {
+
+                message.textContent =
+                    result.message;
+
+                message.classList.add(
+                    "error"
+                );
+
+            }
+
+        })
+
+
+        .catch(error => {
+
+            console.error(error);
+
+            message.textContent =
+                "Something went wrong while updating user.";
+
+            message.classList.add(
+                "error"
+            );
+
+        });
+
+    }
+);
+
+
+
+/* ==========================================
+   CANCEL
+   ========================================== */
+
+function goBack() {
+
+    window.location.href =
+        "admin_users.html";
+
+}
+
+
+
+/* ==========================================
+   LOGOUT
+   ========================================== */
+
+function logout() {
+
+    localStorage.clear();
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+/* ==========================================
+   START
+   ========================================== */
+
+loadUser();
+
+
+</script>
+
+
+</body>
+
+</html>
